@@ -38,8 +38,15 @@ This project has 3 main components: a web server, a web client, and a mobile app
 3. You can now communicate with the server at `localhost:8080`
 
 ### Raised-Hands web client
-
-`TODO`
+1. Install dependencies for web-client: from `raised-hands-web-client` directory, execute:
+    ```
+    $ npm i
+    ```
+2. Run the client:
+    ```
+    npm start
+    ```
+3. You can now view the web-client at `localhost:3000`
 
 ### Raised-Hands Android app
 
@@ -50,11 +57,17 @@ This project has 3 main components: a web server, a web client, and a mobile app
 
 ### Raised-Hands server
 
-`TODO`
+From  `raised-hands-server` directory, execute:
+```
+./gradlew test
+```
 
 ### Raised-Hands web client
 
-`TODO`
+From `raised-hands-web-client` directory, execute:
+```
+$ npm test
+```
 
 ### Raised-Hands Android app
 
