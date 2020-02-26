@@ -69,7 +69,7 @@ This project has 3 main components: a web server, a web client, and a mobile app
 
 From  `raised-hands-server` directory, execute:
 ```
-./gradlew test
+$ ./gradlew test
 ```
 
 ### Raised-Hands web client
@@ -83,7 +83,7 @@ $ npm test
 
 From  `raised-hands-android` directory, execute:
 ```
-./gradlew test
+$ ./gradlew test
 ```
 
 ---
