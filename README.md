@@ -12,6 +12,14 @@ TBD
 
 This project has 3 main components: a web server, a web client, and a mobile app. Below, steps are given for setting them up on your own machine.
 
+---
+#### Dependencies:
+* Java 8 (JDK + JRE)
+* Android Studio
+* Node >= 12
+
+---
+
 ### Raised-Hands server
 **Using Docker**  
 1. Build the latest source: from CLI in `raised-hands-server` directory, execute:
