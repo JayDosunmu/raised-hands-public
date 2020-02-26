@@ -33,7 +33,7 @@ This project has 3 main components: a web server, a web client, and a mobile app
 3. You can now communicate with the server at `localhost:8080`
   
 **Using Gradle**
-1. Create a build: from CLIT in the `raised-hands-server` directory, execute:
+1. Create a build: from CLI in the `raised-hands-server` directory, execute:
     ```
     $ ./gradlew build 
     ```
@@ -58,7 +58,9 @@ This project has 3 main components: a web server, a web client, and a mobile app
 
 ### Raised-Hands Android app
 
-`TODO`
+1. Open the `raised-hands-android` project in `Android Studio`
+
+2. Run the app using the `run app` button or `^R`
 
 ---
 ## How to test
@@ -79,7 +81,10 @@ $ npm test
 
 ### Raised-Hands Android app
 
-`TODO`
+From  `raised-hands-android` directory, execute:
+```
+./gradlew test
+```
 
 ---
 ## How to deploy
