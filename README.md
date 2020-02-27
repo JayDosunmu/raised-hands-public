@@ -17,6 +17,7 @@ This project has 3 main components: a web server, a web client, and a mobile app
 * Java 8 (JDK + JRE)
 * Android Studio
 * Node >= 12
+* Docker
 
 ---
 
