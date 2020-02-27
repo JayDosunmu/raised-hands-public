@@ -57,9 +57,17 @@ This project has 3 main components: a web server, a web client, and a mobile app
     ```
 2. Run the client:
     ```
-    npm start
+    $ npm start
     ```
 3. You can now view the web-client at `localhost:3000`
+
+### Stand up the server and web-client together using Docker Compose
+1. `docker-compose` can be used to stand up both the server and web-client by executing the following from the top-level `raised-hands` project directory:
+    ```
+    $ docker-compose up --build -t
+    ```
+1. Communicate with the server from `localhost:8080`
+1. Access the web-client from `localhost:3000`
 
 ### Raised-Hands Android app
 
