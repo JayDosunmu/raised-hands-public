@@ -23,15 +23,19 @@ This project has 3 main components: a web server, a web client, and a mobile app
 
 ### Raised-Hands server
 **Using Docker**  
-1. Build the latest source: from CLI in `raised-hands-server` directory, execute:
+1. Create a build: from CLI in the `raised-hands-server` directory, execute:
+    ```
+    $ ./gradlew build 
+    ```
+2. Containerize the build:
     ```
     $ docker build --build-arg JAR_FILE=build/libs/*.jar -t raised-hands/raised-hands-server .
     ```
-2. Run the containerized server:
+3. Run the containerized server:
     ```
     $ docker run -p 8080:8080 -t raised-hands/raised-hands-server
     ```
-3. You can now communicate with the server at `localhost:8080`
+4. You can now communicate with the server at `localhost:8080`
   
 **Using Gradle**
 1. Create a build: from CLI in the `raised-hands-server` directory, execute:
