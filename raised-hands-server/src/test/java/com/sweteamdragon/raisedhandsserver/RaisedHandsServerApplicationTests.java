@@ -25,4 +25,10 @@ class RaisedHandsServerApplicationTests {
         this.mockMvc.perform(post("/register").contentType("application/json").content(json)).andExpect(status().isOk());
     }
 
+    @Test
+    public void shouldReturnErrorWithEmptyPassword() throws Exception {
+        RegisterRequestModel userRegistrationDataObject = new RegisterRequestModel("test@email.com", "");
+        String json = new ObjectMapper().writeValueAsString(userRegistrationDataObject);
+        this.mockMvc.perform(post("/register").contentType("application/json").content(json)).andExpect(status().is4xxClientError());
+    }
 }
