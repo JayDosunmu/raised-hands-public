@@ -3,11 +3,29 @@ services:
   backend:
     build: ./raised-hands-server/
     container_name: raised-hands-server
+    command: ["./gradlew", "bootRun"]
     restart: on-failure
+    volumes:
+      - ./raised-hands-server:/app
     ports:
+      - "5005:5005"
       - "8080:8080"
     expose:
-      - "8000"
+      - "8080"
+    networks:
+      - main
+
+  frontend:
+    build: ./raised-hands-web-client/
+    container_name: raised-hands-web-client
+    command: ["npm", "start"]
+    restart: on-failure
+    volumes:
+      - ./raised-hands-web-client:/app
+    ports:
+      - "3000:3000"
+    expose:
+      - "3000"
     networks:
       - main
 
