@@ -14,15 +14,15 @@ import java.util.concurrent.atomic.AtomicLong;
 @RestController
 public class AuthController {
 
-    private final static String template = "%s";
+    private final static String template = "%s:%s";
     private final AtomicLong counter = new AtomicLong();
 
     @PostMapping("/register")
     public RegisterResponseModel register(@RequestBody RegisterRequestModel registerRequestModel) throws Exception {
         if (registerRequestModel.getPassword().equals("")) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
-        return new RegisterResponseModel(counter.getAndIncrement(), String.format(template, registerRequestModel.getEmail()));
+        return new RegisterResponseModel(counter.getAndIncrement(), String.format(template, registerRequestModel.getEmail(), "hot reloaded!"));
     }
 
 }
