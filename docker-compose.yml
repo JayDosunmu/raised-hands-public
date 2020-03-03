@@ -1,9 +1,11 @@
 version: '3'
 services:
   backend:
-    build: ./raised-hands-server/
+    build:
+      context: ./raised-hands-server/
+      dockerfile: Dockerfile.dev
     container_name: raised-hands-server
-    command: ["./gradlew", "bootRun"]
+    command: ["gradle", "bootRun"]
     restart: on-failure
     volumes:
       - ./raised-hands-server:/app
@@ -14,6 +16,11 @@ services:
       - "8080"
     networks:
       - main
+    depends_on:
+      - db
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
 
   frontend:
     build: ./raised-hands-web-client/
@@ -28,6 +35,24 @@ services:
       - "3000"
     networks:
       - main
+    depends_on:
+      - backend
+
+  db:
+    image: postgres:latest
+    container_name: postgres
+    restart: on-failure
+    ports:
+      - "5432:5432"
+    expose:
+      - "5432"
+    networks:
+      - main
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
 
 networks:
   main:
