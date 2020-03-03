@@ -20,14 +20,14 @@ class RaisedHandsServerApplicationTests {
 
     @Test
     public void shouldReturnSuccessfullyWithValidUserEmailAndPassword() throws Exception {
-        RegisterRequestModel userRegistrationDataObject = new RegisterRequestModel("test@email.com", "testPassw0rd!");
+        RegisterRequestModel userRegistrationDataObject = new RegisterRequestModel("test@email.com", "testPassw0rd!", "testPassw0rd!", "first name", "last name");
         String json = new ObjectMapper().writeValueAsString(userRegistrationDataObject);
         this.mockMvc.perform(post("/register").contentType("application/json").content(json)).andExpect(status().isOk());
     }
 
     @Test
     public void shouldReturnErrorWithEmptyPassword() throws Exception {
-        RegisterRequestModel userRegistrationDataObject = new RegisterRequestModel("test@email.com", "");
+        RegisterRequestModel userRegistrationDataObject = new RegisterRequestModel("test@email.com", "", "", "first name", "last name");
         String json = new ObjectMapper().writeValueAsString(userRegistrationDataObject);
         this.mockMvc.perform(post("/register").contentType("application/json").content(json)).andExpect(status().is4xxClientError());
     }
