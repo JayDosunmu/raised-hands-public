@@ -21,6 +21,39 @@ This project has 3 main components: a web server, a web client, and a mobile app
 
 ---
 
+### Stand up the server and web-client together using Docker Compose
+* Using this method also starts the server in debug mode, allowing you to [attach a remote debugger (using intelliJ for instance)](https://www.baeldung.com/spring-debugging) on port `5005`
+1. First create a new build for the server. From a terminal `cd` into the `raised-hands-server` directory, and use Gradle to create a build:
+    ```
+    $ cd /path/to/raised-hands/raised-hands-server
+
+    $ ./gradlew build
+    ```
+1. Create a copy of `.env.template` named `.env` in the top-level `raised-hands` project directory, and fill in the appropriate values for the environment variables:
+    ```
+    $ cd /path/to/raised-hands
+
+    $ cp .env.template .env
+
+    $ vim .env
+    # Database
+
+    POSTGRES_USER=<provide your value>
+    POSTGRES_PASSWORD=<provide your value>
+
+    ... # other env variables
+
+    ```
+1. [`docker-compose`](https://docs.docker.com/compose/) can be used to stand up both the server and web-client by executing the following from the top-level `raised-hands` project directory:
+    ```
+    $ cd /path/to/raised-hands
+
+    $ docker-compose up --build -t
+    ```
+1. Communicate with the server from `localhost:8080`
+1. Attach a remote debugger to the server from `localhost:5005`
+1. Access the web-client from `localhost:3000`
+
 ### Raised-Hands server
 **Using Docker**  
 1. Create a build: from CLI in the `raised-hands-server` directory, execute:
@@ -60,14 +93,6 @@ This project has 3 main components: a web server, a web client, and a mobile app
     $ npm start
     ```
 3. You can now view the web-client at `localhost:3000`
-
-### Stand up the server and web-client together using Docker Compose
-1. `docker-compose` can be used to stand up both the server and web-client by executing the following from the top-level `raised-hands` project directory:
-    ```
-    $ docker-compose up --build -t
-    ```
-1. Communicate with the server from `localhost:8080`
-1. Access the web-client from `localhost:3000`
 
 ### Raised-Hands Android app
 

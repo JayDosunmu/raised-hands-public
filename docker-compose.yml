@@ -5,7 +5,7 @@ services:
       context: ./raised-hands-server/
       dockerfile: Dockerfile.dev
     container_name: raised-hands-server
-    command: ["gradle", "bootRun"]
+    command: ["gradle", "bootRun", "--args='--spring.profiles.active=dev'"]
     restart: on-failure
     volumes:
       - ./raised-hands-server:/app
