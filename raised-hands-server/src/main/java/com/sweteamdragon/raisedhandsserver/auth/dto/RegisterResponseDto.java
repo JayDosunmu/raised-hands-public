@@ -1,21 +1,22 @@
-package com.sweteamdragon.raisedhandsserver.auth.models;
+package com.sweteamdragon.raisedhandsserver.auth.dto;
 
-public class RegisterResponseModel {
+import com.sweteamdragon.raisedhandsserver.auth.model.Account;
+import lombok.*;
+import org.modelmapper.ModelMapper;
 
-    private final long id;
-    private final String content;
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
+@Getter
+@Setter
+public class RegisterResponseDto {
 
-    public RegisterResponseModel(long id, String content) {
-        this.id = id;
-        this.content = content;
+    private static final ModelMapper modelMapper = new ModelMapper();
+
+    private long id;
+    private String email;
+
+    static public RegisterResponseDto from(Account account) {
+        return modelMapper.map(account, RegisterResponseDto.class);
     }
-
-    public long getId() {
-        return id;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
 }

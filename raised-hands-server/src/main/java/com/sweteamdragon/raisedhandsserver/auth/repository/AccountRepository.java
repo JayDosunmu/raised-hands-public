@@ -1,6 +1,6 @@
-package com.sweteamdragon.raisedhandsserver.auth.repositories;
+package com.sweteamdragon.raisedhandsserver.auth.repository;
 
-import com.sweteamdragon.raisedhandsserver.auth.models.Account;
+import com.sweteamdragon.raisedhandsserver.auth.model.Account;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

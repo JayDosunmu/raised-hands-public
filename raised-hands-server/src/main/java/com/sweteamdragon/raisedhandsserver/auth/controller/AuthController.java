@@ -1,42 +1,33 @@
-package com.sweteamdragon.raisedhandsserver.auth.controllers;
+package com.sweteamdragon.raisedhandsserver.auth.controller;
 
-import com.sweteamdragon.raisedhandsserver.auth.models.Account;
-import com.sweteamdragon.raisedhandsserver.auth.models.RegisterRequestModel;
-import com.sweteamdragon.raisedhandsserver.auth.models.RegisterResponseModel;
-import com.sweteamdragon.raisedhandsserver.auth.repositories.AccountRepository;
-import com.sweteamdragon.raisedhandsserver.auth.services.AccountService;
+import com.sweteamdragon.raisedhandsserver.auth.model.Account;
+import com.sweteamdragon.raisedhandsserver.auth.dto.RegisterRequestDto;
+import com.sweteamdragon.raisedhandsserver.auth.dto.RegisterResponseDto;
+import com.sweteamdragon.raisedhandsserver.auth.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.concurrent.atomic.AtomicLong;
-
 @RestController
+@RequestMapping("/auth")
 public class AuthController {
-
-    private final static String template = "%s";
-    private final AtomicLong counter = new AtomicLong();
 
     @Autowired
     AccountService accountService;
 
     @PostMapping("/register")
-    public RegisterResponseModel register(@RequestBody RegisterRequestModel registerRequestModel) throws ResponseStatusException {
-        if (!registerRequestModel.getPassword().equals(registerRequestModel.getConfirmPassword())) {
+    public RegisterResponseDto register(@RequestBody RegisterRequestDto registerRequestDto) throws ResponseStatusException {
+        Account account;
+        try {
+            account = accountService.signup(registerRequestDto);
+        } catch(Exception e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Passwords do not match");
         }
-        try {
-            accountService.save(new Account(
-                    registerRequestModel.getEmail(),
-                    registerRequestModel.getPassword()
-            ));
-        } except
-        return new RegisterResponseModel(counter.getAndIncrement(), String.format(template, registerRequestModel.getEmail()));
+        return RegisterResponseDto.from(account);
     }
 
 }

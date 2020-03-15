@@ -1,40 +1,21 @@
-package com.sweteamdragon.raisedhandsserver.auth.models;
+package com.sweteamdragon.raisedhandsserver.auth.dto;
 
-public class RegisterRequestModel {
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.*;
 
-    private final String email;
-    private final String password;
-    private final String confirmPassword;
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
+@Getter
+@Setter
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class RegisterRequestDto {
 
-    private final String firstName;
-    private final String lastName;
+    private String email;
+    private String password;
+    private String confirmPassword;
 
-    public RegisterRequestModel(String email, String password, String confirmPassword, String firstName, String lastName) {
-        this.email = email;
-        this.password = password;
-        this.confirmPassword = confirmPassword;
-        this.firstName = firstName;
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getConfirmPassword() {
-        return confirmPassword;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
+    private String name;
 }
