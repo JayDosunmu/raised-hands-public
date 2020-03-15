@@ -1,6 +1,6 @@
 package com.sweteamdragon.raisedhandsserver.auth.models;
 
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,6 +9,10 @@ import javax.persistence.Id;
 
 @Entity
 @Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Account {
 
     @Id
@@ -18,8 +22,6 @@ public class Account {
     private String email;
 
     private String password;
-
-    public Account() {}
 
     public Account(String email, String password) {
         this.email = email;

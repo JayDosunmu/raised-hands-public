@@ -30,10 +30,12 @@ public class AuthController {
         if (!registerRequestModel.getPassword().equals(registerRequestModel.getConfirmPassword())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Passwords do not match");
         }
-        accountService.save(new Account(
-                registerRequestModel.getEmail(),
-                registerRequestModel.getPassword()
-        ));
+        try {
+            accountService.save(new Account(
+                    registerRequestModel.getEmail(),
+                    registerRequestModel.getPassword()
+            ));
+        } except
         return new RegisterResponseModel(counter.getAndIncrement(), String.format(template, registerRequestModel.getEmail()));
     }
 

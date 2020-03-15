@@ -12,6 +12,11 @@ public class AccountService implements AccountServiceInterface {
     AccountRepository accountRepository;
 
     @Override
+    public Account signup(Account account) {
+        return null;
+    }
+
+    @Override
     public void save(Account account) {
         accountRepository.save(account);
     }
