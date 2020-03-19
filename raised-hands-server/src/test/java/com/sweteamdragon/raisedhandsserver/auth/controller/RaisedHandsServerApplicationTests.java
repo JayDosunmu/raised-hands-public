@@ -23,16 +23,16 @@ class RaisedHandsServerApplicationTests {
 
     @Test
     public void shouldReturnSuccessfullyWithValidUserEmailAndPassword() throws Exception {
+        /*
+            - user created successfully
+            - response status correct
+            - response structure correct
+                - JWT
+                - user
+         */
         RegisterRequestDto userRegistrationDataObject = new RegisterRequestDto("test@email.com", "testPassw0rd!", "testPassw0rd!", "name");
         String json = new ObjectMapper().writeValueAsString(userRegistrationDataObject);
         this.mockMvc.perform(post(registerEndpoint).contentType("application/json").content(json)).andExpect(status().isOk());
-    }
-
-    @Test
-    public void shouldReturnErrorIfPasswordsDoNotMatch() throws Exception {
-        RegisterRequestDto userRegistrationDataObject = new RegisterRequestDto("test@email.com", "one_password", "different_password", "name");
-        String json = new ObjectMapper().writeValueAsString(userRegistrationDataObject);
-        this.mockMvc.perform(post(registerEndpoint).contentType("application/json").content(json)).andExpect(status().is4xxClientError());
     }
 
     @Test
@@ -40,6 +40,28 @@ class RaisedHandsServerApplicationTests {
         RegisterRequestDto userRegistrationDataObject = new RegisterRequestDto("test@email.com", "pass", "pass", "name");
         String json = new ObjectMapper().writeValueAsString(userRegistrationDataObject);
         this.mockMvc.perform(post(registerEndpoint).contentType("application/json").content(json));
-        this.mockMvc.perform(post(registerEndpoint).contentType("application/json").content(json)).andExpect(status().is4xxClientError());
+        this.mockMvc.perform(post(registerEndpoint).contentType("application/json").content(json)).andExpect(status().isConflict());
+    }
+
+    @Test
+    public void shouldReturnErrorIfPasswordsDoNotMatch() throws Exception {
+        RegisterRequestDto userRegistrationDataObject = new RegisterRequestDto("test@email.com", "one_password", "different_password", "name");
+        String json = new ObjectMapper().writeValueAsString(userRegistrationDataObject);
+        this.mockMvc.perform(post(registerEndpoint).contentType("application/json").content(json)).andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void shouldReturnErrorIfPasswordIsInvalid() throws Exception {
+
+    }
+
+    @Test
+    public void shouldReturnErrorIfNameIsInvalid() throws Exception {
+
+    }
+
+    @Test
+    public void shouldReturnErrorIfUserAlreadyAuthenticated() throws Exception {
+
     }
 }
