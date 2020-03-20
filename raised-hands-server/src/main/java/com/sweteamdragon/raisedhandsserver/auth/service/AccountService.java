@@ -45,7 +45,7 @@ public class AccountService implements AccountServiceInterface {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         try {
-            return this.accountRepository.findByEmail(email);
+            return this.findByEmail(email);
         } catch(IllegalArgumentException e) {
             throw new UsernameNotFoundException(String.format(template, email));
         }

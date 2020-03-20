@@ -21,6 +21,10 @@ services:
     environment:
       - POSTGRES_USER
       - POSTGRES_PASSWORD
+      - SECURITY_SECRET_KEY
+      - SECURITY_EXPIRATION_TIME
+      - SECURITY_TOKEN_PREFIX
+      - SECURITY_HEADER_STRING
 
   frontend:
     build: ./raised-hands-web-client/
