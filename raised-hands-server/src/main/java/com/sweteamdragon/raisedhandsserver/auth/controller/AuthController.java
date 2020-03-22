@@ -3,7 +3,6 @@ package com.sweteamdragon.raisedhandsserver.auth.controller;
 import com.sweteamdragon.raisedhandsserver.auth.dto.AuthResponseDto;
 import com.sweteamdragon.raisedhandsserver.auth.model.Account;
 import com.sweteamdragon.raisedhandsserver.auth.dto.RegisterRequestDto;
-import com.sweteamdragon.raisedhandsserver.auth.dto.RegisterResponseDto;
 import com.sweteamdragon.raisedhandsserver.auth.security.JwtUtil;
 import com.sweteamdragon.raisedhandsserver.auth.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;

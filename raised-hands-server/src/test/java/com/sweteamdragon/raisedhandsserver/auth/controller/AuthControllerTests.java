@@ -14,7 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(classes=RaisedHandsServerApplication.class)
 @AutoConfigureMockMvc
-class RaisedHandsServerApplicationTests {
+class AuthControllerTests {
 
     private final String registerEndpoint = "/auth/register";
 

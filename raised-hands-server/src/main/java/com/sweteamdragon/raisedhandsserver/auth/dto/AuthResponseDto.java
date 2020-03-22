@@ -10,6 +10,6 @@ import lombok.*;
 @Getter
 @Setter
 public class AuthResponseDto {
-    private Account account;
+    private Account user;
     private String jwt;
 }
