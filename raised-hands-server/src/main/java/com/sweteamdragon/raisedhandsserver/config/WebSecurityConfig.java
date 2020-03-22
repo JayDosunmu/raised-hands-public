@@ -2,6 +2,7 @@ package com.sweteamdragon.raisedhandsserver.config;
 
 import com.sweteamdragon.raisedhandsserver.auth.security.JwtAuthenticationFilter;
 import com.sweteamdragon.raisedhandsserver.auth.security.JwtAuthorizationFilter;
+import com.sweteamdragon.raisedhandsserver.auth.security.JwtUtil;
 import com.sweteamdragon.raisedhandsserver.auth.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
@@ -24,6 +25,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     PasswordEncoder passwordEncoder;
 
     @Autowired
+    JwtUtil jwtUtil;
+
+    @Autowired
     SecurityProperties securityProperties;
 
     @Override
@@ -43,7 +47,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .authenticated()
                 .and()
             .addFilter(jwtAuthenticationFilter())
-            .addFilter(new JwtAuthorizationFilter(authenticationManager(), securityProperties));
+            .addFilter(jwtAuthorizationFilter());
     }
 
     @Override
@@ -51,9 +55,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(accountService).passwordEncoder(passwordEncoder);
     }
 
-    private JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception{
-        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager(), securityProperties);
+    private JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
+        JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager(), securityProperties, jwtUtil);
         jwtAuthenticationFilter.setFilterProcessesUrl("/auth/login");
         return jwtAuthenticationFilter;
+    }
+
+    private  JwtAuthorizationFilter jwtAuthorizationFilter() throws Exception {
+        return new JwtAuthorizationFilter(authenticationManager(), securityProperties, jwtUtil);
     }
 }

@@ -1,7 +1,5 @@
 package com.sweteamdragon.raisedhandsserver.auth.security;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.sweteamdragon.raisedhandsserver.config.SecurityProperties;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +26,10 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     @Autowired
     JwtUtil jwtUtil;
 
-    public JwtAuthorizationFilter(AuthenticationManager auth, SecurityProperties securityProperties) {
+    public JwtAuthorizationFilter(AuthenticationManager auth, SecurityProperties securityProperties, JwtUtil jwtUtil) {
         super(auth);
         this.securityProperties = securityProperties;
+        this.jwtUtil = jwtUtil;
     }
 
     @Override
@@ -49,9 +48,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     }
 
     private UsernamePasswordAuthenticationToken getAuthentication(String token) {
-        DecodedJWT jwt = JWT.require(Algorithm.HMAC512(securityProperties.getSecretKey()))
-                .build()
-                .verify(token);
+        DecodedJWT jwt = jwtUtil.decodeJwt(token);
         String user = jwt.getSubject();
 
         GrantedAuthority[] authoritiesFromJwt = jwt.getClaim("authorities").asArray(GrantedAuthority.class);

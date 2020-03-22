@@ -1,7 +1,5 @@
 package com.sweteamdragon.raisedhandsserver.auth.security;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sweteamdragon.raisedhandsserver.auth.dto.AuthResponseDto;
 import com.sweteamdragon.raisedhandsserver.auth.model.Account;
@@ -18,7 +16,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Date;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
@@ -26,11 +23,15 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     SecurityProperties securityProperties;
 
     @Autowired
+    JwtUtil jwtUtil;
+
+    @Autowired
     AuthenticationManager authenticationManager;
 
-    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, SecurityProperties securityProperties) {
+    public JwtAuthenticationFilter(AuthenticationManager authenticationManager, SecurityProperties securityProperties, JwtUtil jwtUtil) {
         this.authenticationManager = authenticationManager;
         this.securityProperties = securityProperties;
+        this.jwtUtil = jwtUtil;
     }
 
     @Override
@@ -54,17 +55,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             HttpServletResponse response,
                                             FilterChain chain,
                                             Authentication auth) throws IOException, ServletException {
-        Date expireTime = new Date(System.currentTimeMillis() + securityProperties.getExpirationTime());
         Account account = (Account) auth.getPrincipal();
+        String token = jwtUtil.createToken(account);
 
-        String token = JWT.create()
-                .withSubject(account.getEmail())
-                .withArrayClaim("authorities", account.getAuthorities().stream().toArray(String[]::new))
-                .withExpiresAt(expireTime)
-                .sign(Algorithm.HMAC512(securityProperties.getSecretKey()));
         response.addHeader(
                 securityProperties.getHeaderString(),
-                securityProperties.formatTokenWithPrefix(token)
+                jwtUtil.formatTokenWithPrefix(token)
         );
         response.addHeader(
                 "Content-type",
