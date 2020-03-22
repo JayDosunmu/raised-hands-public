@@ -2,10 +2,12 @@ package com.sweteamdragon.raisedhandsserver.auth.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.sweteamdragon.raisedhandsserver.config.SecurityProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
@@ -14,12 +16,17 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Date;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     @Autowired
     SecurityProperties securityProperties;
+
+    @Autowired
+    JwtUtil jwtUtil;
 
     public JwtAuthorizationFilter(AuthenticationManager auth, SecurityProperties securityProperties) {
         super(auth);
@@ -34,26 +41,24 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             chain.doFilter(request, response);
             return;
         }
-
-        UsernamePasswordAuthenticationToken authentication = this.getAuthentication(request);
+        String token = jwtUtil.extractToken(header);
+        UsernamePasswordAuthenticationToken authentication = this.getAuthentication(token);
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         chain.doFilter(request, response);
     }
 
-    private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
-        String token = request.getHeader(securityProperties.getHeaderString()).replace(securityProperties.getTokenPrefix(), "");
+    private UsernamePasswordAuthenticationToken getAuthentication(String token) {
+        DecodedJWT jwt = JWT.require(Algorithm.HMAC512(securityProperties.getSecretKey()))
+                .build()
+                .verify(token);
+        String user = jwt.getSubject();
 
-        if (token != null) {
-            String user = JWT.require(Algorithm.HMAC512(securityProperties.getSecretKey()))
-                    .build()
-                    .verify(token)
-                    .getSubject();
+        GrantedAuthority[] authoritiesFromJwt = jwt.getClaim("authorities").asArray(GrantedAuthority.class);
+        Set<GrantedAuthority> authorities = new HashSet<>(Arrays.asList(authoritiesFromJwt));
 
-            if (user != null) {
-                return new UsernamePasswordAuthenticationToken(user, null);
-            }
-            return null;
+        if (user != null) {
+            return new UsernamePasswordAuthenticationToken(user, null, authorities);
         }
         return null;
     }

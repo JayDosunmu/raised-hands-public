@@ -3,6 +3,7 @@ package com.sweteamdragon.raisedhandsserver.auth.security;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sweteamdragon.raisedhandsserver.auth.dto.AuthResponseDto;
 import com.sweteamdragon.raisedhandsserver.auth.model.Account;
 import com.sweteamdragon.raisedhandsserver.config.SecurityProperties;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,8 +41,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             return authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         creds.getUsername(),
-                        creds.getPassword(),
-                        creds.getAuthorities()
+                        creds.getPassword()
                 )
             );
         } catch (IOException e) {
@@ -54,15 +54,26 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             HttpServletResponse response,
                                             FilterChain chain,
                                             Authentication auth) throws IOException, ServletException {
-        Long expireDiff = securityProperties.getExpirationTime();
-        Date expireTime = new Date(System.currentTimeMillis() + expireDiff);
+        Date expireTime = new Date(System.currentTimeMillis() + securityProperties.getExpirationTime());
+        Account account = (Account) auth.getPrincipal();
+
         String token = JWT.create()
-                .withSubject(((Account) auth.getPrincipal()).getEmail())
+                .withSubject(account.getEmail())
+                .withArrayClaim("authorities", account.getAuthorities().stream().toArray(String[]::new))
                 .withExpiresAt(expireTime)
                 .sign(Algorithm.HMAC512(securityProperties.getSecretKey()));
         response.addHeader(
                 securityProperties.getHeaderString(),
-                securityProperties.getTokenPrefix() + token
+                securityProperties.formatTokenWithPrefix(token)
         );
+        response.addHeader(
+                "Content-type",
+                "application/json"
+        );
+        AuthResponseDto authResponseDto = new AuthResponseDto(account, token);
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        objectMapper.writeValue(response.getWriter(), authResponseDto);
+        chain.doFilter(request, response);
     }
 }
