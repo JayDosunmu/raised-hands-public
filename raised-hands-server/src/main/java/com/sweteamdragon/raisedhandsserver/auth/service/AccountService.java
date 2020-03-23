@@ -26,7 +26,8 @@ public class AccountService implements AccountServiceInterface {
         }
         Account account = new Account(
                 registerRequestDto.getEmail(),
-                passwordEncoder.encode(registerRequestDto.getPassword())
+                passwordEncoder.encode(registerRequestDto.getPassword()),
+                registerRequestDto.getName()
         );
         this.save(account);
         return account;

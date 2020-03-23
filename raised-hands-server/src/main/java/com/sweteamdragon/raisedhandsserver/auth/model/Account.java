@@ -1,6 +1,5 @@
 package com.sweteamdragon.raisedhandsserver.auth.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -30,11 +29,16 @@ public class Account implements UserDetails {
     private String email;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @NotEmpty
     private String password;
 
-    public Account(String email, String password) {
+    @NotEmpty
+    private String name;
+
+    public Account(String email, String password, String name) {
         this.email = email;
         this.password = password;
+        this.name = name;
     }
 
     @Override
