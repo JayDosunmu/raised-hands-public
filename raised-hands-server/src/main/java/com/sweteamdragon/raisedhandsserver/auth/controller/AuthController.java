@@ -32,7 +32,7 @@ public class AuthController {
             account = accountService.signup(registerRequestDto);
             token = jwtUtil.createToken(account);
         } catch(Exception e) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Passwords do not match");
+            throw e; // new ResponseStatusException(HttpStatus.BAD_REQUEST, "Passwords do not match");
         }
         return new AuthResponseDto(account, token);
     }
