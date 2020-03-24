@@ -21,13 +21,13 @@ public class AccountService implements AccountServiceInterface {
     private final String template = "User with email %s not found";
 
     @Autowired
-    PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
-    AccountRepository accountRepository;
+    private AccountRepository accountRepository;
 
     @Override
-    public Account signup(RegisterRequestDto registerRequestDto) throws BadCredentialsException, UserAlreadyExistAuthenticationException, DataIntegrityViolationException{
+    public Account signUp(RegisterRequestDto registerRequestDto) throws BadCredentialsException, UserAlreadyExistAuthenticationException, DataIntegrityViolationException{
         if (registerRequestDto.getPassword() == null) {
             throw new BadCredentialsException("Password missing");
         }
@@ -40,6 +40,7 @@ public class AccountService implements AccountServiceInterface {
         if (!registerRequestDto.getPassword().equals(registerRequestDto.getConfirmPassword())) {
             throw new BadCredentialsException("Passwords do not match");
         }
+
         try {
             Account account = new Account(
                     registerRequestDto.getEmail(),
@@ -50,6 +51,7 @@ public class AccountService implements AccountServiceInterface {
             return account;
         } catch (DataIntegrityViolationException e) {
             String constraint = ((ConstraintViolationException) e.getCause()).getConstraintName();
+
             if (Pattern.compile("uk", Pattern.CASE_INSENSITIVE).matcher(constraint).find()) {
                 throw new UserAlreadyExistAuthenticationException("An account with this email already exists");
             }

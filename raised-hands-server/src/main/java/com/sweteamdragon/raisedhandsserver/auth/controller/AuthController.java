@@ -31,8 +31,9 @@ public class AuthController {
     public AuthResponseDto register(@RequestBody RegisterRequestDto registerRequestDto, Authentication authentication) throws ResponseStatusException {
         Account account;
         String token;
+
         try {
-            account = accountService.signup(registerRequestDto);
+            account = accountService.signUp(registerRequestDto);
             token = jwtUtil.createToken(account);
         } catch(BadCredentialsException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
