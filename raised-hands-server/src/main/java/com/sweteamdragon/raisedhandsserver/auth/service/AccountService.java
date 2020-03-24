@@ -13,6 +13,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.regex.Pattern;
+
 @Service
 public class AccountService implements AccountServiceInterface {
 
@@ -47,7 +49,8 @@ public class AccountService implements AccountServiceInterface {
             this.save(account);
             return account;
         } catch (DataIntegrityViolationException e) {
-            if (((ConstraintViolationException) e.getCause()).getConstraintName().contains("uk")) {
+            String constraint = ((ConstraintViolationException) e.getCause()).getConstraintName();
+            if (Pattern.compile("uk", Pattern.CASE_INSENSITIVE).matcher(constraint).find()) {
                 throw new UserAlreadyExistAuthenticationException("An account with this email already exists");
             }
             throw e;
