@@ -28,14 +28,14 @@ public class AccountService implements AccountServiceInterface {
 
     @Override
     public Account signUp(RegisterRequestDto registerRequestDto) throws BadCredentialsException, UserAlreadyExistAuthenticationException, DataIntegrityViolationException{
-        if (registerRequestDto.getPassword() == null) {
+        if (registerRequestDto.getPassword() == null || registerRequestDto.getPassword().length() < 1) {
             throw new BadCredentialsException("Password missing");
         }
-        if (registerRequestDto.getConfirmPassword() == null) {
+        if (registerRequestDto.getConfirmPassword() == null || registerRequestDto.getConfirmPassword().length() < 1) {
             throw new BadCredentialsException("Confirm password missing");
         }
-        if (registerRequestDto.getConfirmPassword().length() < 1) {
-            throw new BadCredentialsException("Password provided is invalid");
+        if (registerRequestDto.getName() == null|| registerRequestDto.getName().length() < 1) {
+            throw new BadCredentialsException("Name is missing");
         }
         if (!registerRequestDto.getPassword().equals(registerRequestDto.getConfirmPassword())) {
             throw new BadCredentialsException("Passwords do not match");
