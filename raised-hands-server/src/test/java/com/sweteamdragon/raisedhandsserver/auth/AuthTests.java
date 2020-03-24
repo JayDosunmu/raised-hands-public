@@ -11,7 +11,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.springframework.test.util.AssertionErrors.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(classes = RaisedHandsServerApplication.class)
@@ -42,9 +44,20 @@ class AuthTests {
 
         RegisterRequestDto userRegistrationDataObject = new RegisterRequestDto("test@email.com", "testPassw0rd!", "testPassw0rd!", "name");
         String json = new ObjectMapper().writeValueAsString(userRegistrationDataObject);
-        this.mockMvc.perform(post(registerEndpoint).contentType("application/json").content(json)).andExpect(status().isOk());
-        account = accountRepository.findByEmail("test@email.com");
-        accountRepository.delete(account);
+        this.mockMvc.perform(post(registerEndpoint).contentType("application/json").content(json))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.user.email").isString())
+                .andExpect(jsonPath("$.user.name").isString())
+                .andExpect(jsonPath("$.user.id").isNumber())
+                .andExpect(jsonPath("$.user.password").doesNotExist())
+                .andExpect(jsonPath("$.jwt").isString());
+
+        Account createdAccount = accountRepository.findByEmail("test@email.com");
+        assertNotNull("Account registration must create a user", createdAccount);
+        assertEquals("Created account email and input email must match!", createdAccount.getEmail(), "test@email.com");
+        assertEquals("Created account name and input name must match!", createdAccount.getName(), "name");
+        assertNotEquals("Encrypted password and input password must not match!", createdAccount.getPassword(), "testPassw0rd!");
+        accountRepository.delete(createdAccount);
     }
 
     @Test
