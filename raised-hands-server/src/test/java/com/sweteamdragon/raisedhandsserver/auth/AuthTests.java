@@ -11,6 +11,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.springframework.test.util.AssertionErrors.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -80,15 +83,78 @@ class AuthTests {
         this.mockMvc.perform(post(registerEndpoint).contentType("application/json").content(json))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(""));
+
+        Account account = accountRepository.findByEmail("test@email.com");
+        assertNull("Account should not be created if passwords do not match", account);
     }
 
     @Test
     public void shouldReturnErrorIfPasswordIsInvalid() throws Exception {
+        RegisterRequestDto userRegistrationDataObject;
+        Map<String, String> map;
+        String json;
+        Account account;
 
+        userRegistrationDataObject = new RegisterRequestDto("test@email.com", "", "", "name");
+        json = new ObjectMapper().writeValueAsString(userRegistrationDataObject);
+        this.mockMvc.perform(post(registerEndpoint).contentType("application/json").content(json))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(""));
+
+        account = accountRepository.findByEmail("test@email.com");
+        assertNull("Account should not be created if password is empty string", account);
+
+        map = new HashMap<>();
+        map.put("email", "test@email.com");
+        map.put("name", "name");
+        map.put("confirmPassword", "password");
+        json = new ObjectMapper().writeValueAsString(map);
+        this.mockMvc.perform(post(registerEndpoint).contentType("application/json").content(json))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(""));
+
+        account = accountRepository.findByEmail("test@email.com");
+        assertNull("Account should not be created if password not provided", account);
+
+        map = new HashMap<>();
+        map.put("email", "test@email.com");
+        map.put("name", "name");
+        map.put("password", "password");
+        json = new ObjectMapper().writeValueAsString(map);
+        this.mockMvc.perform(post(registerEndpoint).contentType("application/json").content(json))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(""));
+
+        account = accountRepository.findByEmail("test@email.com");
+        assertNull("Account should not be created if confirmPassword not provided", account);
     }
 
     @Test
     public void shouldReturnErrorIfNameIsInvalid() throws Exception {
+        RegisterRequestDto userRegistrationDataObject;
+        Map<String, String> map;
+        String json;
+        Account account;
 
+        userRegistrationDataObject = new RegisterRequestDto("test@email.com", "password", "password", "");
+        json = new ObjectMapper().writeValueAsString(userRegistrationDataObject);
+        this.mockMvc.perform(post(registerEndpoint).contentType("application/json").content(json))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(""));
+
+        account = accountRepository.findByEmail("test@email.com");
+        assertNull("Account should not be created if name is empty string", account);
+
+        map = new HashMap<>();
+        map.put("email", "test@email.com");
+        map.put("password", "password");
+        map.put("confirmPassword", "password");
+        json = new ObjectMapper().writeValueAsString(map);
+        this.mockMvc.perform(post(registerEndpoint).contentType("application/json").content(json))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(""));
+
+        account = accountRepository.findByEmail("test@email.com");
+        assertNull("Account should not be created if name not provided", account);
     }
 }
