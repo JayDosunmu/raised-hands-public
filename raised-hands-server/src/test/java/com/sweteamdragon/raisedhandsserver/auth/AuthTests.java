@@ -77,7 +77,9 @@ class AuthTests {
     public void shouldReturnErrorIfPasswordsDoNotMatch() throws Exception {
         RegisterRequestDto userRegistrationDataObject = new RegisterRequestDto("test@email.com", "one_password", "different_password", "name");
         String json = new ObjectMapper().writeValueAsString(userRegistrationDataObject);
-        this.mockMvc.perform(post(registerEndpoint).contentType("application/json").content(json)).andExpect(status().isBadRequest());
+        this.mockMvc.perform(post(registerEndpoint).contentType("application/json").content(json))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(""));
     }
 
     @Test
