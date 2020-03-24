@@ -1,4 +1,4 @@
-package com.sweteamdragon.raisedhandsserver.auth.controller;
+package com.sweteamdragon.raisedhandsserver.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sweteamdragon.raisedhandsserver.RaisedHandsServerApplication;
@@ -14,9 +14,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest(classes=RaisedHandsServerApplication.class)
+@SpringBootTest(classes = RaisedHandsServerApplication.class)
 @AutoConfigureMockMvc
-class AuthControllerTests {
+class AuthTests {
 
     private final String registerEndpoint = "/auth/register";
 
@@ -49,16 +49,13 @@ class AuthControllerTests {
 
     @Test
     public void shouldReturnErrorIfEmailTaken() throws Exception {
-        Account account = accountRepository.findByEmail("test@email.com");
-        if (account != null) {
-            accountRepository.delete(account);
-        }
-
         RegisterRequestDto userRegistrationDataObject = new RegisterRequestDto("test@email.com", "pass", "pass", "name");
         String json = new ObjectMapper().writeValueAsString(userRegistrationDataObject);
+
         this.mockMvc.perform(post(registerEndpoint).contentType("application/json").content(json));
         this.mockMvc.perform(post(registerEndpoint).contentType("application/json").content(json)).andExpect(status().isConflict());
-        account = accountRepository.findByEmail("test@email.com");
+
+        Account account = accountRepository.findByEmail("test@email.com");
         accountRepository.delete(account);
     }
 
@@ -76,11 +73,6 @@ class AuthControllerTests {
 
     @Test
     public void shouldReturnErrorIfNameIsInvalid() throws Exception {
-
-    }
-
-    @Test
-    public void shouldReturnErrorIfUserAlreadyAuthenticated() throws Exception {
 
     }
 }

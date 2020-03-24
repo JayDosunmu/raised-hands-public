@@ -1,9 +1,13 @@
 package com.sweteamdragon.raisedhandsserver.auth.service;
 
 import com.sweteamdragon.raisedhandsserver.auth.dto.RegisterRequestDto;
+import com.sweteamdragon.raisedhandsserver.auth.exception.UserAlreadyExistAuthenticationException;
 import com.sweteamdragon.raisedhandsserver.auth.model.Account;
 import com.sweteamdragon.raisedhandsserver.auth.repository.AccountRepository;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,16 +25,33 @@ public class AccountService implements AccountServiceInterface {
     AccountRepository accountRepository;
 
     @Override
-    public Account signup(RegisterRequestDto registerRequestDto) {
-        if (!registerRequestDto.getPassword().equals(registerRequestDto.getConfirmPassword())) {
+    public Account signup(RegisterRequestDto registerRequestDto) throws BadCredentialsException, UserAlreadyExistAuthenticationException, DataIntegrityViolationException{
+        if (registerRequestDto.getPassword() == null) {
+            throw new BadCredentialsException("Password missing");
         }
-        Account account = new Account(
-                registerRequestDto.getEmail(),
-                passwordEncoder.encode(registerRequestDto.getPassword()),
-                registerRequestDto.getName()
-        );
-        this.save(account);
-        return account;
+        if (registerRequestDto.getConfirmPassword() == null) {
+            throw new BadCredentialsException("Confirm password missing");
+        }
+        if (registerRequestDto.getConfirmPassword().length() < 1) {
+            throw new BadCredentialsException("Password provided is invalid");
+        }
+        if (!registerRequestDto.getPassword().equals(registerRequestDto.getConfirmPassword())) {
+            throw new BadCredentialsException("Passwords do not match");
+        }
+        try {
+            Account account = new Account(
+                    registerRequestDto.getEmail(),
+                    passwordEncoder.encode(registerRequestDto.getPassword()),
+                    registerRequestDto.getName()
+            );
+            this.save(account);
+            return account;
+        } catch (DataIntegrityViolationException e) {
+            if (((ConstraintViolationException) e.getCause()).getConstraintName().contains("uk")) {
+                throw new UserAlreadyExistAuthenticationException("An account with this email already exists");
+            }
+            throw e;
+        }
     }
 
     @Override
