@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 public interface AccountServiceInterface extends UserDetailsService {
 
-    Account signup(RegisterRequestDto registerRequestDto);
+    Account signUp(RegisterRequestDto registerRequestDto);
 
     void save(Account account);
 
