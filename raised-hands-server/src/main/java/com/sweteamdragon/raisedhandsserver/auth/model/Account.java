@@ -22,7 +22,7 @@ public class Account implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Long accountId;
 
     @Column(name = "email", unique = true)
     @NotEmpty

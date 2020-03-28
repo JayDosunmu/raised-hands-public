@@ -20,7 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(classes = RaisedHandsServerApplication.class)
 @AutoConfigureMockMvc
-class AuthTests {
+class AuthTest {
 
     private final String registerEndpoint = "/auth/register";
 
@@ -50,7 +50,7 @@ class AuthTests {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.user.email").isString())
                 .andExpect(jsonPath("$.user.name").isString())
-                .andExpect(jsonPath("$.user.id").isNumber())
+                .andExpect(jsonPath("$.user.accountId").isNumber())
                 .andExpect(jsonPath("$.user.password").doesNotExist())
                 .andExpect(jsonPath("$.jwt").isString());
 

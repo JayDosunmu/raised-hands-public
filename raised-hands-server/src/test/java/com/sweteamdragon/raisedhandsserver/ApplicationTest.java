@@ -6,7 +6,7 @@ import org.springframework.test.context.TestPropertySource;
 
 @SpringBootTest(classes = RaisedHandsServerApplication.class)
 @TestPropertySource(locations="classpath:application.properties")
-class ApplicationTests {
+class ApplicationTest {
 
     @Test
     void applicationContextLoads() {

@@ -76,7 +76,7 @@ public class SessionController {
                 new UserJoinedSessionMessage(
                         user.getName(),
                         user.getEmail(),
-                        user.getId()
+                        user.getAccountId()
                 )
         );
         return new SessionResponseDto(
