@@ -27,17 +27,14 @@ export default class Login extends Component {
 
     axios
       .post(
-        "http://localhost:3000/sessions",
+        "/api/auth/login",
         {
-          user: {
-            email: email,
-            password: password
-          }
-        },
-        { withCredentials: true }
+          email: email,
+          password: password
+        }
       )
       .then(response => {
-        if (response.data.logged_in) {
+        if (response.data.user) {
           this.props.handleSuccessfulAuth(response.data);
         }
       })
