@@ -5,15 +5,12 @@ import com.sweteamdragon.raisedhandsserver.RaisedHandsServerApplication;
 import com.sweteamdragon.raisedhandsserver.auth.model.Account;
 import com.sweteamdragon.raisedhandsserver.auth.security.JwtUtil;
 import com.sweteamdragon.raisedhandsserver.config.TestConfiguration;
-import com.sweteamdragon.raisedhandsserver.session.controller.SessionController;
 import com.sweteamdragon.raisedhandsserver.session.dto.SessionCreateRequestDto;
 import com.sweteamdragon.raisedhandsserver.util.TestAuth;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithUserDetails;
@@ -44,10 +41,6 @@ public class SessionIntegrationTest {
     private final boolean testSessionNotDistractionFree = false;
     private final Date testStartDate = new Date();
     private final Date testEndDate = new Date();
-
-
-    @InjectMocks
-    SessionController sessionControllerUnderTest;
 
     @Autowired
     private WebApplicationContext context;

@@ -4,7 +4,6 @@ import com.sweteamdragon.raisedhandsserver.auth.dto.RegisterRequestDto;
 import com.sweteamdragon.raisedhandsserver.auth.model.Account;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 public interface AccountService extends UserDetailsService {
 

@@ -1,21 +1,19 @@
 package com.sweteamdragon.raisedhandsserver.session.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Date;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
 @Getter
 @Setter
-public class SessionResponseDto {
-
-    private Long id;
+public class SessionCreateRequestDto {
     private String name;
-    private String passcode;
-    private boolean active;
-    private boolean distractionFree;
     private Date startDate;
     private Date endDate;
+    private boolean distractionFree;
 }
