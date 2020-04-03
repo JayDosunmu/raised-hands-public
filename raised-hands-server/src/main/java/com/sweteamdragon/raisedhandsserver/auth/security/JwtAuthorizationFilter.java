@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Stream;
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
@@ -51,7 +53,9 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         DecodedJWT jwt = jwtUtil.decodeJwt(token);
         String user = jwt.getSubject();
 
-        GrantedAuthority[] authoritiesFromJwt = jwt.getClaim("authorities").asArray(GrantedAuthority.class);
+        GrantedAuthority[] authoritiesFromJwt = Stream.of(jwt.getClaim("authorities").asArray(String.class))
+                .map(authority -> new SimpleGrantedAuthority(authority))
+                .toArray(GrantedAuthority[]::new);
         Set<GrantedAuthority> authorities = new HashSet<>(Arrays.asList(authoritiesFromJwt));
 
         if (user != null) {

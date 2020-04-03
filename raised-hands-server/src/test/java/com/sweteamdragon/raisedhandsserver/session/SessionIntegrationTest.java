@@ -1,9 +1,11 @@
-package com.sweteamdragon.raisedhandsserver.session.controller;
+package com.sweteamdragon.raisedhandsserver.session;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sweteamdragon.raisedhandsserver.RaisedHandsServerApplication;
 import com.sweteamdragon.raisedhandsserver.auth.model.Account;
 import com.sweteamdragon.raisedhandsserver.auth.security.JwtUtil;
 import com.sweteamdragon.raisedhandsserver.config.TestConfiguration;
+import com.sweteamdragon.raisedhandsserver.session.controller.SessionController;
 import com.sweteamdragon.raisedhandsserver.session.dto.SessionCreateRequestDto;
 import com.sweteamdragon.raisedhandsserver.util.TestAuth;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ContextConfiguration;
@@ -27,10 +30,10 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(SessionController.class)
+@SpringBootTest(classes = RaisedHandsServerApplication.class)
 @AutoConfigureMockMvc
 @ContextConfiguration(classes = TestConfiguration.class)
-public class SessionControllerTest {
+public class SessionIntegrationTest {
 
     // TODO: make these configured values
     private final String sessionEndpoint = "/session";

@@ -3,6 +3,7 @@ package com.sweteamdragon.raisedhandsserver.auth.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
@@ -43,7 +44,11 @@ public class Account implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return new HashSet<GrantedAuthority>();
+        Collection<GrantedAuthority> authorities = new HashSet<>();
+        authorities.add(
+                new SimpleGrantedAuthority("USER")
+        );
+        return authorities;
     }
 
     @Override
