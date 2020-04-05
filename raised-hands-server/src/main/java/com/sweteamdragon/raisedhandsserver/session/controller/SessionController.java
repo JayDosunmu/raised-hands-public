@@ -10,6 +10,7 @@ import com.sweteamdragon.raisedhandsserver.session.message.UserJoinedSessionMess
 import com.sweteamdragon.raisedhandsserver.session.model.Session;
 import com.sweteamdragon.raisedhandsserver.session.service.SessionService;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -58,19 +59,22 @@ public class SessionController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public SessionCreateResponseDto create(@RequestBody SessionCreateRequestDto sessionCreateRequestDto, Authentication authentication) throws ResponseStatusException{
-        Account user = accountService.findByEmail((String) authentication.getPrincipal());
+        try {
+            Account user = accountService.findByEmail((String) authentication.getPrincipal());
 
-        Session session = sessionService.create(
-            user,
-            sessionCreateRequestDto.getName(),
-            sessionCreateRequestDto.isDistractionFree(),
-            sessionCreateRequestDto.getStartDate(),
-            sessionCreateRequestDto.getEndDate()
-        );
+            Session session = sessionService.create(
+                    user,
+                    sessionCreateRequestDto.getName(),
+                    sessionCreateRequestDto.isDistractionFree(),
+                    sessionCreateRequestDto.getStartDate(),
+                    sessionCreateRequestDto.getEndDate()
+            );
 
-        ModelMapper modelMapper = new ModelMapper();
-
-        return modelMapper.map(session, SessionCreateResponseDto.class);
+            ModelMapper modelMapper = new ModelMapper();
+            return modelMapper.map(session, SessionCreateResponseDto.class);
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
     }
 
     @PostMapping("/join")
