@@ -11,9 +11,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
+@Getter
+@Setter
+@EqualsAndHashCode(of="sessionId")
 public class Session {
 
     @Id
@@ -28,10 +31,10 @@ public class Session {
 
     private String passcode;
 
-    @OneToOne(optional = false)
+    @OneToOne(optional = false, cascade = CascadeType.ALL)
     private SessionParticipant leader;
 
-    @OneToMany(mappedBy = "session")
+    @OneToMany(mappedBy = "session",  cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<SessionParticipant> participants;
 
     private boolean active;
@@ -54,5 +57,15 @@ public class Session {
         this.participants = new HashSet<>();
 
         this.active = startDate == null ? false : new Date().compareTo( startDate) >= 0;
+    }
+
+    public void setLeader(SessionParticipant leader) {
+        this.leader = leader;
+        this.addParticipant(leader);
+    }
+
+    public void addParticipant(SessionParticipant participant) {
+        this.participants.add(participant);
+        participant.setSession(this);
     }
 }

@@ -11,10 +11,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
@@ -28,7 +25,8 @@ public class AuthController {
     JwtUtil jwtUtil;
 
     @PostMapping("/register")
-    public AuthResponseDto register(@RequestBody RegisterRequestDto registerRequestDto, Authentication authentication) throws ResponseStatusException {
+    @ResponseStatus(HttpStatus.CREATED)
+    public AuthResponseDto register(@RequestBody RegisterRequestDto registerRequestDto) throws ResponseStatusException {
         Account account;
         String token;
 
@@ -40,6 +38,7 @@ public class AuthController {
         } catch (UserAlreadyExistAuthenticationException | DataIntegrityViolationException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
         }
+
         return new AuthResponseDto(account, token);
     }
 

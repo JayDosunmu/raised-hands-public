@@ -67,8 +67,7 @@ public class SessionController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public SessionCreateResponseDto create(SessionCreateRequestDto sessionCreateRequestDto) throws ResponseStatusException{
-        Authentication authentication = authenticationFacade.getAuthentication();
+    public SessionCreateResponseDto create(@RequestBody SessionCreateRequestDto sessionCreateRequestDto, Authentication authentication) throws ResponseStatusException{
         Account user = accountService.findByEmail((String) authentication.getPrincipal());
 
         Session session = sessionService.create(
@@ -97,7 +96,7 @@ public class SessionController {
                         user.getAccountId()
                 )
         );
-        throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED, "Not implemented");
+        throw new ResponseStatusException(HttpStatus.OK, "Message sent");
     }
 
     @MessageMapping
