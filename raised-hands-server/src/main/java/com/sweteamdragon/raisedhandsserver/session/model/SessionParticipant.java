@@ -13,18 +13,16 @@ import java.util.Date;
 @ToString(exclude = { "session" })
 @Getter
 @Setter
-@EqualsAndHashCode(of="sessionParticipantId")
 public class SessionParticipant {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long sessionParticipantId;
 
-    @ManyToOne(optional = false, cascade = CascadeType.ALL)
+    @ManyToOne
     private Account account;
 
-    @NonNull
-    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Session session;
 
     private boolean leader;

@@ -18,7 +18,6 @@ import java.util.HashSet;
 @NoArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode(of="email")
 public class Account implements UserDetails {
 
     @Id

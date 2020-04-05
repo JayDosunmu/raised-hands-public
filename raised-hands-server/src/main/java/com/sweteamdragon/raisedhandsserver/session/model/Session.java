@@ -16,7 +16,6 @@ import java.util.Set;
 @ToString
 @Getter
 @Setter
-@EqualsAndHashCode(of="sessionId")
 public class Session {
 
     @Id
@@ -31,10 +30,10 @@ public class Session {
 
     private String passcode;
 
-    @OneToOne(optional = false, cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
     private SessionParticipant leader;
 
-    @OneToMany(mappedBy = "session",  cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "session", fetch = FetchType.LAZY,  cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<SessionParticipant> participants;
 
     private boolean active;

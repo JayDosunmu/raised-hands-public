@@ -35,7 +35,6 @@ public class SessionServiceImpl implements SessionService {
         Session session = new Session(name, distractionFree, startDate, endDate);
         session.setLeader(leader);
 
-        sessionParticipantRepository.save(leader);
         sessionRepository.save(session);
 
         return session;
