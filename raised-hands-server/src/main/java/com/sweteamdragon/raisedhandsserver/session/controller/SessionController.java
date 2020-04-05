@@ -44,15 +44,6 @@ public class SessionController {
     public SessionCreateResponseDto getSessions(Authentication authentication) throws ResponseStatusException{
         Account user = accountService.findByEmail((String) authentication.getPrincipal());
 
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(2020, Calendar.MARCH, 17, 14, 45);
-        Date startDate = calendar.getTime();
-        calendar.set(2020, Calendar.MARCH, 17, 16, 15);
-        Date endDate = calendar.getTime();
-
-        if (authentication == null || authentication.getName() == null) {
-        }
         throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED, "Not implemented");
     }
 
@@ -91,15 +82,5 @@ public class SessionController {
                 )
         );
         throw new ResponseStatusException(HttpStatus.OK, "Message sent");
-    }
-
-    @MessageMapping
-    @SendTo("/topic/joinSession")
-    public JoinSessionResponseDto join(UserJoinedSessionMessage message) throws Exception {
-        return new JoinSessionResponseDto(
-            HtmlUtils.htmlEscape(message.getName()),
-            HtmlUtils.htmlEscape(message.getEmail()),
-            message.getId()
-        );
     }
 }

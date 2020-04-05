@@ -16,10 +16,10 @@ public class SessionCreateResponseDto {
     private String name;
     private String joinId;
     private String passcode;
-    private ShallowSessionParticipantDto leader;
-    private Set<ShallowSessionParticipantDto> participants;
     private boolean active;
     private boolean distractionFree;
     private Date startDate;
     private Date endDate;
+    private ShallowSessionParticipantDto leader;
+    private Set<ShallowSessionParticipantDto> participants;
 }
