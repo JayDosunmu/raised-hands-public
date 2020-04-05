@@ -19,7 +19,7 @@ public class JwtUtil {
     public String createToken(Account account) {
         return JWT.create()
                 .withSubject(account.getEmail())
-                .withArrayClaim("authorities", account.getAuthorities().stream().toArray(String[]::new))
+                .withArrayClaim("authorities", account.getAuthorities().stream().map(auth -> auth.getAuthority()).toArray(String[]::new))
                 .withExpiresAt(new Date(System.currentTimeMillis() + securityProperties.getExpirationTime()))
                 .sign(Algorithm.HMAC512(securityProperties.getSecretKey()));
     }
@@ -37,4 +37,9 @@ public class JwtUtil {
     public String formatTokenWithPrefix(String token) {
         return String.format("%s %s", securityProperties.getTokenPrefix(), token);
     }
+
+    public String getHeaderString() {
+        return securityProperties.getHeaderString();
+    }
+
 }

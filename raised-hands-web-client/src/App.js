@@ -84,10 +84,8 @@ export default class App extends Component {
               exact
               path={"/dashboard"}
               render={props => (
-                <Dashboard
-                  {...props}
-                  loggedInStatus={this.state.loggedInStatus}
-                />
+                
+                <WebsocketClient {...props}/>
               )}
             />
           </Switch>
@@ -96,4 +94,3 @@ export default class App extends Component {
     );
   }
 }
-

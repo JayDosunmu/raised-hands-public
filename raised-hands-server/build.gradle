@@ -29,6 +29,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
     implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.security:spring-security-messaging'
+    implementation 'org.springframework.security:spring-security-test'
     implementation 'org.liquibase:liquibase-core'
     compile('org.modelmapper:modelmapper:1.1.0')
     compile('com.auth0:java-jwt:3.4.0')
