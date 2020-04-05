@@ -23,10 +23,10 @@ public class Session {
     private long sessionId;
 
     @NotEmpty
-    private String joinId;
+    private String name;
 
     @NotEmpty
-    private String name;
+    private String joinId;
 
     private String passcode;
 

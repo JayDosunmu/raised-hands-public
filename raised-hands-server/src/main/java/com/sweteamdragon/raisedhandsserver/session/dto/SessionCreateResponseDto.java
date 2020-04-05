@@ -1,8 +1,10 @@
 package com.sweteamdragon.raisedhandsserver.session.dto;
 
+import com.sweteamdragon.raisedhandsserver.session.model.SessionParticipant;
 import lombok.*;
 
 import java.util.Date;
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -10,9 +12,12 @@ import java.util.Date;
 @Getter
 @Setter
 public class SessionCreateResponseDto {
-    private Long id;
+    private Long sessionId;
     private String name;
+    private String joinId;
     private String passcode;
+    private ShallowSessionParticipantDto leader;
+    private Set<ShallowSessionParticipantDto> participants;
     private boolean active;
     private boolean distractionFree;
     private Date startDate;

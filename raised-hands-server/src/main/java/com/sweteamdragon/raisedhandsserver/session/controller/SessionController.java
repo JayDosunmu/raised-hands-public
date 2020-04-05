@@ -40,8 +40,7 @@ public class SessionController {
     private SimpMessagingTemplate template;
 
     @GetMapping
-    public SessionCreateResponseDto getSessions() throws ResponseStatusException{
-        Authentication authentication = authenticationFacade.getAuthentication();
+    public SessionCreateResponseDto getSessions(Authentication authentication) throws ResponseStatusException{
         Account user = accountService.findByEmail((String) authentication.getPrincipal());
 
 
@@ -52,17 +51,8 @@ public class SessionController {
         Date endDate = calendar.getTime();
 
         if (authentication == null || authentication.getName() == null) {
-            return new SessionCreateResponseDto(
-                    1L,
-                    authentication.getName() + "'s Session",
-                    "196875",
-                    false,
-                    false,
-                    startDate,
-                    endDate
-            );
         }
-        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Not authorized");
+        throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED, "Not implemented");
     }
 
     @PostMapping

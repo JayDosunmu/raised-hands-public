@@ -20,7 +20,7 @@ public class SessionUtil {
 
     private static String generateSecureRandomString(int len) {
         //TODO: Make values configurable
-        char[] c = new char[9];
+        char[] c = new char[len];
         SecureRandom random = new SecureRandom();
         for (int i = 0; i < len; i++) {
             c[i] = ch[random.nextInt(ch.length)];
