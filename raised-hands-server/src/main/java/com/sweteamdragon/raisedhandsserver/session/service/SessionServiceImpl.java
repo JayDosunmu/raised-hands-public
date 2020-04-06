@@ -8,9 +8,7 @@ import com.sweteamdragon.raisedhandsserver.session.repository.SessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class SessionServiceImpl implements SessionService {
@@ -20,6 +18,32 @@ public class SessionServiceImpl implements SessionService {
 
     @Autowired
     SessionParticipantRepository sessionParticipantRepository;
+
+    @Override
+    public Optional<Session> findById(long sessionId) {
+        return sessionRepository.findById(sessionId);
+    }
+
+
+//  TODO: determine better approach to checking if user is a member of this session
+    @Override
+    public Optional<Session> findByIdSecured(long sessionId, long accountId) {
+        SessionParticipant participant = sessionParticipantRepository.findBySessionSessionIdAndAccountAccountId(sessionId, accountId);
+        return sessionRepository.findById(sessionId)
+                .map((session) -> {
+                    if (participant == null) {
+                        session.setParticipants(null);
+                        session.setPasscode(null);
+                        session.setJoinId(null);
+                    }
+                    return session;
+                });
+    }
+
+    @Override
+    public List<Session> findAllSessionsByUser(Account account) {
+        return sessionRepository.findByAccount(account);
+    }
 
     @Override
     public Session create(Account user, String name, boolean distractionFree, Date startDate, Date endDate) {

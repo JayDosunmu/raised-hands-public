@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SessionParticipantRepository extends JpaRepository<SessionParticipant, Long> {
+
+    SessionParticipant findBySessionSessionIdAndAccountAccountId(long sessionId, long accountId);
 }
