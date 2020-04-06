@@ -39,12 +39,22 @@ public class SessionController {
     private SimpMessagingTemplate template;
 
     @GetMapping
-    public List<SessionResponseDto> getSessions(Authentication authentication) throws ResponseStatusException{
+    public List<SessionResponseDto> getSessionsOfAuthenticatedUser(Authentication authentication) throws ResponseStatusException{
         Account user = accountService.findByEmail((String) authentication.getPrincipal());
 
-        List<Session> sessions = sessionService.getSessionsByUser(user);
+        List<Session> sessions = sessionService.findAllSessionsByUser(user);
         SessionResponseDto[] sessionsArray = modelMapper.map(sessions, SessionResponseDto[].class);
         return Arrays.asList(sessionsArray);
+    }
+
+    @GetMapping("/{sessionId:^[0-9]*}")
+    public SessionResponseDto getSessionById(@PathVariable long sessionId, Authentication authentication) throws ResponseStatusException {
+        Account user = accountService.findByEmail((String) authentication.getPrincipal());
+
+        Session session = sessionService.findByIdSecured(sessionId, user.getAccountId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No session with that ID"));
+
+        return modelMapper.map(session, SessionResponseDto.class);
     }
 
     @PostMapping
