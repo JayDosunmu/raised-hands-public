@@ -2,6 +2,7 @@ package com.sweteamdragon.raisedhandsserver.session.model;
 
 import com.sweteamdragon.raisedhandsserver.session.util.SessionUtil;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -43,6 +44,10 @@ public class Session {
     private Date startDate;
 
     private Date endDate;
+
+    @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createTimestamp;
 
     public Session(String name, boolean distractionFree, Date startDate, Date endDate) {
         this.name = name;

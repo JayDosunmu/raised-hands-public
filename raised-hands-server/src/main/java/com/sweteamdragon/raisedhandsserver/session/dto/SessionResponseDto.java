@@ -11,7 +11,7 @@ import java.util.Set;
 @ToString
 @Getter
 @Setter
-public class SessionCreateResponseDto {
+public class SessionResponseDto {
     private Long sessionId;
     private String name;
     private String joinId;
@@ -20,6 +20,7 @@ public class SessionCreateResponseDto {
     private boolean distractionFree;
     private Date startDate;
     private Date endDate;
+    private Date createTimestamp;
     private ShallowSessionParticipantDto leader;
     private Set<ShallowSessionParticipantDto> participants;
 }
