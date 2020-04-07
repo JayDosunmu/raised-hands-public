@@ -6,6 +6,7 @@ import com.sweteamdragon.raisedhandsserver.auth.service.AccountService;
 import com.sweteamdragon.raisedhandsserver.session.dto.JoinSessionRequestDto;
 import com.sweteamdragon.raisedhandsserver.session.dto.SessionCreateRequestDto;
 import com.sweteamdragon.raisedhandsserver.session.dto.SessionResponseDto;
+import com.sweteamdragon.raisedhandsserver.session.dto.ShallowSessionParticipantDto;
 import com.sweteamdragon.raisedhandsserver.session.message.UserJoinedSessionMessage;
 import com.sweteamdragon.raisedhandsserver.session.model.Session;
 import com.sweteamdragon.raisedhandsserver.session.model.SessionParticipant;
@@ -110,8 +111,11 @@ public class SessionController {
             SessionParticipant sessionParticipant = (SessionParticipant) sessionData.get("sessionParticipant");
 
             template.convertAndSend(
-                String.format("/app/session/%d/join", session.getSessionId()),
-                sessionParticipant
+                String.format("/topic/session/%d/join", session.getSessionId()),
+                modelMapper.map(
+                    sessionParticipant,
+                    ShallowSessionParticipantDto.class
+                )
             );
             return modelMapper.map(session, SessionResponseDto.class);
         // TODO: Handle exceptions in a more granular fashion
