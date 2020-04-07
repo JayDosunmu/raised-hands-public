@@ -5,8 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class JoinSessionResponseDto {
-    private String name;
-    private String email;
-    private long id;
+public class JoinSessionRequestDto {
+    private String joinId;
+    private String passcode;
 }

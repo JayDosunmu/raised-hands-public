@@ -28,7 +28,10 @@ public class SessionServiceImpl implements SessionService {
 //  TODO: determine better approach to checking if user is a member of this session
     @Override
     public Optional<Session> findByIdSecured(long sessionId, long accountId) {
-        SessionParticipant participant = sessionParticipantRepository.findBySessionSessionIdAndAccountAccountId(sessionId, accountId);
+        SessionParticipant participant = sessionParticipantRepository
+                .findBySessionSessionIdAndAccountAccountId(sessionId, accountId)
+                .orElse(null);
+
         return sessionRepository.findById(sessionId)
                 .map((session) -> {
                     if (participant == null) {
@@ -41,20 +44,25 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
-    public List<Session> findAllSessionsByUser(Account account) {
+    public Optional<Session> findByJoinIdSecured(String joinId, long accountId) {
+        return Optional.empty();
+    }
+
+    @Override
+    public List<Session> findAllByAccount(Account account) {
         return sessionRepository.findByAccount(account);
     }
 
     @Override
-    public Session create(Account user, String name, boolean distractionFree, Date startDate, Date endDate) {
-        if (user == null) {
+    public Session create(Account account, String name, boolean distractionFree, Date startDate, Date endDate) {
+        if (account == null) {
             throw new IllegalArgumentException("User to set as session leader not found");
         }
         if (startDate != null && endDate != null && endDate.compareTo(startDate) < 0) {
             throw new IllegalArgumentException("End date must be after start date");
         }
 
-        SessionParticipant leader = new SessionParticipant(user, true);
+        SessionParticipant leader = new SessionParticipant(account, true);
 
         Session session = new Session(name, distractionFree, startDate, endDate);
         session.setLeader(leader);
@@ -62,5 +70,30 @@ public class SessionServiceImpl implements SessionService {
         sessionRepository.save(session);
 
         return session;
+    }
+
+    @Override
+    public Map<String, Object> join(String joinId, String passcode, Account account) throws IllegalArgumentException {
+        Session session = sessionRepository.findByJoinId(joinId)
+                .orElseThrow(() -> new IllegalArgumentException("Session not found"));
+
+        SessionParticipant participant = sessionParticipantRepository
+                .findBySessionSessionIdAndAccountAccountId(session.getSessionId(), account.getAccountId())
+                .orElseGet(() -> new SessionParticipant(account));
+
+
+        if (!session.equals(participant.getSession())) {
+            if (!session.getPasscode().equals(passcode)) {
+                throw new IllegalArgumentException("Passcode provided is incorrect for session");
+            }
+            session.addParticipant(participant);
+            sessionRepository.save(session);
+        }
+
+        Map<String, Object> sessionData = new HashMap<>();
+        sessionData.put("session", session);
+        sessionData.put("sessionParticipant", participant);
+
+        return sessionData;
     }
 }

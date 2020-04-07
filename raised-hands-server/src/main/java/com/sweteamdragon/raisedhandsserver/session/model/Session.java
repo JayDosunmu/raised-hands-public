@@ -31,7 +31,7 @@ public class Session {
 
     private String passcode;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private SessionParticipant leader;
 
     @OneToMany(mappedBy = "session", fetch = FetchType.LAZY,  cascade = CascadeType.ALL, orphanRemoval = true)

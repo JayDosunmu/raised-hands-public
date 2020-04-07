@@ -8,10 +8,13 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface SessionRepository extends JpaRepository<Session, Long> {
 
     @Query("SELECT s FROM Session s, SessionParticipant sp WHERE sp.session = s AND sp.account = :account")
     List<Session> findByAccount(@Param("account") Account account);
+
+    Optional<Session> findByJoinId(String joinId);
 }

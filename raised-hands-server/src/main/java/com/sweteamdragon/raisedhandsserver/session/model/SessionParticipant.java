@@ -35,4 +35,9 @@ public class SessionParticipant {
         this.account = account;
         this.leader = leader;
     }
+
+    public SessionParticipant(Account account) {
+        this.account = account;
+        this.leader = false;
+    }
 }
