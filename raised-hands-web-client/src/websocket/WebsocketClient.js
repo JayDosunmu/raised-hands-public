@@ -8,26 +8,28 @@ export default class WebsocketClient extends React.Component {
         super(props);
         this.state = {
             websocket: null,
-            users: []
+            users: {}
         };
     }
 
     addUser = (user) => {
         const users = this.state.users;
-        users.push(user);
+        if (!users.hasOwnProperty(user.sessionParticipantId)) {
+            users[user.sessionParticipantId] = user;
+        }
         this.setState({
             users
         });
 
     }
 
-    connectWebsocket = (websocketUrl) => {
+    connectWebsocket = ({connectUrl, topicUrl, appUrl }) => {
         try {
-            const websocket = Stomp.client(websocketUrl);
+            const websocket = Stomp.client(connectUrl);
             websocket.connect({}, e => {
-                console.log("connected to websocket: " + websocketUrl);
+                console.log("connected to websocket: " + connectUrl);
 
-                websocket.subscribe("/topic/joinSession", message => {
+                websocket.subscribe(topicUrl, message => {
                     console.log(message)
                     this.addUser(JSON.parse(message.body));
                 })
@@ -45,11 +47,13 @@ export default class WebsocketClient extends React.Component {
         return (
             <div>
                 <WebsocketForm connectWebsocket={this.connectWebsocket} />
+                <ul>
                 {
-                    this.state.users.map(user => (
-                        <div>{user.email}</div>
+                    Object.entries(this.state.users).map( ([participantId, user]) => (
+                        <li key={participantId}>{user.account.email}</li>
                     ))
                 }
+                </ul>
             </div>
         );
     }
