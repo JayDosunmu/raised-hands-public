@@ -1,10 +1,13 @@
 package com.sweteamdragon.raisedhandsserver.session.service;
 
 import com.sweteamdragon.raisedhandsserver.auth.model.Account;
+import com.sweteamdragon.raisedhandsserver.session.dto.SessionMessagingMetadataDto;
+import com.sweteamdragon.raisedhandsserver.session.dto.SessionResponseDto;
 import com.sweteamdragon.raisedhandsserver.session.model.Session;
 import com.sweteamdragon.raisedhandsserver.session.model.SessionParticipant;
 import com.sweteamdragon.raisedhandsserver.session.repository.SessionParticipantRepository;
 import com.sweteamdragon.raisedhandsserver.session.repository.SessionRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,13 +22,16 @@ public class SessionServiceImpl implements SessionService {
     @Autowired
     SessionParticipantRepository sessionParticipantRepository;
 
+    @Autowired
+    ModelMapper modelMapper;
+
     @Override
     public Optional<Session> findById(long sessionId) {
         return sessionRepository.findById(sessionId);
     }
 
 
-//  TODO: determine better approach to checking if user is a member of this session
+    //  TODO: determine better approach to checking if user is a member of this session
     @Override
     public Optional<Session> findByIdSecured(long sessionId, long accountId) {
         SessionParticipant participant = sessionParticipantRepository
@@ -95,5 +101,29 @@ public class SessionServiceImpl implements SessionService {
         sessionData.put("sessionParticipant", participant);
 
         return sessionData;
+    }
+
+    @Override
+    public SessionResponseDto getSessionWithMessagingMetadata(Session session) {
+        SessionResponseDto sessionResponseDto = modelMapper.map(session, SessionResponseDto.class);
+        sessionResponseDto.setWebsocketData(
+                new SessionMessagingMetadataDto(
+                        "/api/connect",
+                        this.getSessionTopicUrl(session),
+                        this.getSessionAppUrl(session)
+                )
+        );
+
+        return sessionResponseDto;
+    }
+
+    @Override
+    public String getSessionTopicUrl(Session session) {
+        return String.format("/topic/session/%d", session.getSessionId());
+    }
+
+    @Override
+    public String getSessionAppUrl(Session session) {
+        return String.format("/app/session/%d", session.getSessionId());
     }
 }

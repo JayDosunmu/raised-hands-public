@@ -1,6 +1,7 @@
 package com.sweteamdragon.raisedhandsserver.session.service;
 
 import com.sweteamdragon.raisedhandsserver.auth.model.Account;
+import com.sweteamdragon.raisedhandsserver.session.dto.SessionResponseDto;
 import com.sweteamdragon.raisedhandsserver.session.model.Session;
 
 import java.util.Date;
@@ -21,4 +22,10 @@ public interface SessionService {
     List<Session> findAllByAccount(Account account);
 
     Map<String, Object> join(String joinId, String passcode, Account account);
+
+    SessionResponseDto getSessionWithMessagingMetadata(Session session);
+
+    String getSessionTopicUrl(Session session);
+
+    String getSessionAppUrl(Session session);
 }

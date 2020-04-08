@@ -7,7 +7,6 @@ import com.sweteamdragon.raisedhandsserver.session.dto.JoinSessionRequestDto;
 import com.sweteamdragon.raisedhandsserver.session.dto.SessionCreateRequestDto;
 import com.sweteamdragon.raisedhandsserver.session.dto.SessionResponseDto;
 import com.sweteamdragon.raisedhandsserver.session.dto.ShallowSessionParticipantDto;
-import com.sweteamdragon.raisedhandsserver.session.message.UserJoinedSessionMessage;
 import com.sweteamdragon.raisedhandsserver.session.model.Session;
 import com.sweteamdragon.raisedhandsserver.session.model.SessionParticipant;
 import com.sweteamdragon.raisedhandsserver.session.service.SessionService;
@@ -23,12 +22,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+/*
+ TODO: currently, messaging integration is clunky. Extract the correct functionality
+        into a proper service, and improve the data models
+*/
+
 @RestController
 @RequestMapping("/session")
 public class SessionController {
-
-    @Autowired
-    private AuthenticationFacade authenticationFacade;
 
     @Autowired
     private AccountService accountService;
@@ -47,7 +48,11 @@ public class SessionController {
         Account user = accountService.findByEmail((String) authentication.getPrincipal());
 
         List<Session> sessions = sessionService.findAllByAccount(user);
-        SessionResponseDto[] sessionsArray = modelMapper.map(sessions, SessionResponseDto[].class);
+        SessionResponseDto[] sessionsArray = modelMapper.map(
+                sessions.stream().map(
+                        session -> sessionService.getSessionWithMessagingMetadata(session)
+                ),
+                SessionResponseDto[].class);
         return Arrays.asList(sessionsArray);
     }
 
@@ -66,7 +71,7 @@ public class SessionController {
             session = sessionService.findByIdSecured(Long.parseLong(sessionId), user.getAccountId())
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "No session with that ID"));
         }
-        return modelMapper.map(session, SessionResponseDto.class);
+        return sessionService.getSessionWithMessagingMetadata(session);
     }
 
     @PostMapping
@@ -85,7 +90,7 @@ public class SessionController {
                     sessionCreateRequestDto.getEndDate()
             );
 
-            return modelMapper.map(session, SessionResponseDto.class);
+            return sessionService.getSessionWithMessagingMetadata(session);
         } catch (IllegalArgumentException e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
@@ -93,7 +98,7 @@ public class SessionController {
 
     @PostMapping("/join")
     public SessionResponseDto join(
-                @RequestBody JoinSessionRequestDto joinSessionRequestDto,
+                @RequestBody(required = false) JoinSessionRequestDto joinSessionRequestDto,
                 Authentication authentication) throws ResponseStatusException {
         Account user = accountService.findByEmail((String) authentication.getPrincipal());
 
@@ -110,14 +115,15 @@ public class SessionController {
             Session session = (Session) sessionData.get("session");
             SessionParticipant sessionParticipant = (SessionParticipant) sessionData.get("sessionParticipant");
 
+            // TODO: This should be extracted into some component responsible for this app's messaging
             template.convertAndSend(
-                String.format("/topic/session/%d/join", session.getSessionId()),
+                sessionService.getSessionTopicUrl(session),
                 modelMapper.map(
                     sessionParticipant,
                     ShallowSessionParticipantDto.class
                 )
             );
-            return modelMapper.map(session, SessionResponseDto.class);
+            return sessionService.getSessionWithMessagingMetadata(session);
         // TODO: Handle exceptions in a more granular fashion
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());

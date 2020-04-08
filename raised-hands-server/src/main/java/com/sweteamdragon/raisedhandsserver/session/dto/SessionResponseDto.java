@@ -1,6 +1,5 @@
 package com.sweteamdragon.raisedhandsserver.session.dto;
 
-import com.sweteamdragon.raisedhandsserver.session.model.SessionParticipant;
 import lombok.*;
 
 import java.util.Date;
@@ -23,4 +22,5 @@ public class SessionResponseDto {
     private Date createTimestamp;
     private ShallowSessionParticipantDto leader;
     private Set<ShallowSessionParticipantDto> participants;
+    private SessionMessagingMetadataDto websocketData;
 }
