@@ -1,12 +1,10 @@
 package com.sweteamdragon.raisedhandsserver.session.message;
 
+import com.sweteamdragon.raisedhandsserver.session.dto.ShallowSessionParticipantDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class UserJoinedSessionMessage {
-    private String name;
-    private String email;
-    private long id;
+public class UserJoinedSessionMessage extends ShallowSessionParticipantDto {
 }

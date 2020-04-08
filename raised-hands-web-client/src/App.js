@@ -3,7 +3,7 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 import axios from "axios";
 
 import Home from "./Home";
-import Dashboard from "./Dashboard";
+import { WebsocketClient } from "./websocket";
 
 export default class App extends Component {
   constructor() {
@@ -84,8 +84,9 @@ export default class App extends Component {
               exact
               path={"/dashboard"}
               render={props => (
-                
-                <WebsocketClient {...props}/>
+                <WebsocketClient
+                  {...props}
+                />
               )}
             />
           </Switch>
