@@ -1,16 +1,22 @@
 
 import React, { Component } from "react";
+import { Redirect } from "react-router";
 import axios from "axios";
 
-export default class Login extends Component {
+export default class LoginForm extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       email: "",
       password: "",
-      loginErrors: ""
+      loginErrors: "",
+      redirectToReferrer: false
     };
+
+    const { referrer } = this.props.location && this.props.location.state
+                            ? this.props.location.state
+                            : { referrer: '/sessions' };
+    this.state.referrer = referrer;
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -35,8 +41,11 @@ export default class Login extends Component {
       )
       .then(response => {
         if (response.data.user) {
-          this.props.handleSuccessfulAuth(response.data);
+          localStorage.setItem("token", response.data.jwt);
         }
+        this.setState({
+          redirectToReferrer: true
+        });
       })
       .catch(error => {
         console.log("login error", error);
@@ -45,6 +54,12 @@ export default class Login extends Component {
   }
 
   render() {
+    if (this.state.redirectToReferrer) {
+      return (
+        <Redirect to={this.state.referrer} />
+      )
+    }
+
     return (
       <div>
         <form onSubmit={this.handleSubmit}>

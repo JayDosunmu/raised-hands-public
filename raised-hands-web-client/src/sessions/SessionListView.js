@@ -1,13 +1,13 @@
 import React from "react";
 import Stomp from 'stompjs'
 
-export default class Dashboard extends React.Component {
+export default class SessionListView extends React.Component {
   constructor(props) {
       super(props);
       this.state = {
           websocketUrl: "ws://localhost:8080/api/connect",
           websocket: null,
-          participants: []
+          participants: {}
       };
   }
 
@@ -17,7 +17,7 @@ export default class Dashboard extends React.Component {
 
   addParticipant = (participant) => {
       const participants = this.state.participants;
-      participants.push(participant);
+      participants[participant.sessionParticipantId] = participant;
       this.setState({
           participants
       });
@@ -30,7 +30,7 @@ export default class Dashboard extends React.Component {
           websocket.connect({}, e => {
               console.log("connected to websocket: " + websocketUrl);
 
-              websocket.subscribe("/topic/joinSession", message => {
+              websocket.subscribe("/topic/session/3", message => {
                   console.log(JSON.parse(message.body))
                   this.addParticipant(JSON.parse(message.body));
               })
@@ -50,10 +50,9 @@ export default class Dashboard extends React.Component {
               <div>Connected to {this.state.websocketUrl}</div>
               <ul>
               {
-                  this.state.participants.map(participant => {
-                    console.log(participant);
+                  Object.entries(this.state.participants).map(([participantId, participant]) => {
                     return(
-                      <li key={participant.sessionParticipantId}>
+                      <li key={participantId}>
                         {participant.account.email}
                       </li>
                   )})
