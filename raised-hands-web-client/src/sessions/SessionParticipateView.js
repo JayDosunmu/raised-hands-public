@@ -25,6 +25,12 @@ export default class SessionParticipateView extends React.Component {
         this.getSession(sessionId)
     }
 
+    componentWillUnmount() {
+        const { websocket, subscribeUrl } = this.state.websocketData;
+        websocket.unsubscribe(subscribeUrl);
+        websocket.disconnect();
+    }
+
     getSession = async (sessionId) => {
         const sessionData = await SessionService.getSession(sessionId);
         this.setState(sessionData);
@@ -32,14 +38,12 @@ export default class SessionParticipateView extends React.Component {
     }
 
     connectWebsocket = ({connectUrl, topicUrl, appUrl }) => {
-        console.log(connectUrl, topicUrl, appUrl);
         try {
             const websocket = Stomp.client(connectUrl);
             websocket.connect({}, e => {
                 console.log("connected to websocket: " + connectUrl);
 
                 websocket.subscribe(topicUrl, message => {
-                    console.log(message)
                     this.addParticipant(JSON.parse(message.body));
                 })
             });
@@ -75,7 +79,7 @@ export default class SessionParticipateView extends React.Component {
                     Object.entries(this.state.participants)
                         .sort(([idx1, p1], [idx2, p2]) => (p1.sessionParticipantId - p2.sessionParticipantId))
                         .map(([_, participant]) =>
-                            <li key={participant.participantId}>{participant.account.email}</li>
+                            <li key={participant.sessionParticipantId}>{participant.account.email}</li>
                         )
                 }
                 </ul>

@@ -51,7 +51,7 @@ public class SessionController {
         SessionResponseDto[] sessionsArray = modelMapper.map(
                 sessions.stream().map(
                         session -> sessionService.getSessionWithMessagingMetadata(session)
-                ),
+                ).toArray(),
                 SessionResponseDto[].class);
         return Arrays.asList(sessionsArray);
     }

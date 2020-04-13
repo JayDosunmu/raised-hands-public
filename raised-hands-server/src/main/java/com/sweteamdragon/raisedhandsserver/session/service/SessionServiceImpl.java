@@ -74,6 +74,7 @@ public class SessionServiceImpl implements SessionService {
         session.setLeader(leader);
 
         sessionRepository.save(session);
+        sessionParticipantRepository.save(leader);
 
         return session;
     }
@@ -93,7 +94,7 @@ public class SessionServiceImpl implements SessionService {
                 throw new IllegalArgumentException("Passcode provided is incorrect for session");
             }
             session.addParticipant(participant);
-            sessionRepository.save(session);
+            sessionParticipantRepository.save(participant);
         }
 
         Map<String, Object> sessionData = new HashMap<>();

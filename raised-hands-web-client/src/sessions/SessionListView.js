@@ -38,13 +38,11 @@ export default class SessionListView extends React.Component {
               <div>Your Sessions</div>
               <ul>
               {
-                  Object.entries(this.state.sessions).map(([sessionId, session]) => {
-                      console.log(sessionId);
-                    return(
+                  Object.entries(this.state.sessions).map(([sessionId, session]) => (
                       <li key={sessionId}>
                         <Link to={`sessions/${sessionId}/participate`}>{session.name}</Link>
                       </li>
-                  )})
+                  ))
               }
               </ul>
           </div>
