@@ -1,3 +1,4 @@
+import { http } from '../util';
 /*
     functions:
     - isAuthenticated(): boolean
@@ -6,9 +7,49 @@
     - logout():
 */
 
-const AuthService = {
-    isAuthenticated: () => localStorage.getItem('token') != null,
-    logout: () => { localStorage.removeItem('token'); },
+async function authenticate(email, password) {
+    const loginResponse = await http
+        .post(
+            "/auth/login",
+            {
+                email,
+                password,
+            }
+        )
+    return loginResponse.data;
 }
 
-export default AuthService;
+function isAuthenticated() {
+    return localStorage.getItem('token') != null;
+}
+
+function logout(blah) {
+    localStorage.removeItem('token');
+}
+
+async function register(email, password, confirmPassword, name) {
+    const registerResponse = await http
+        .post(
+            "/auth/register",
+            {
+                email,
+                password,
+                confirmPassword,
+                name,
+            }
+        )
+    return registerResponse.data;
+}
+
+function setAppUser(user, jwt) {
+    localStorage.setItem('token', jwt);
+    localStorage.setItem('user', user);
+}
+
+export default {
+    authenticate,
+    isAuthenticated,
+    logout,
+    register,
+    setAppUser,
+};

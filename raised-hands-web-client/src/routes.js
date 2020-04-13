@@ -2,18 +2,20 @@ import React from "react";
 import { BrowserRouter, Switch} from "react-router-dom";
 
 import { AuthenticatedRoute, UnauthenticatedRoute } from "./common";
-import { SessionListView } from "./sessions";
+import { SessionListView, SessionParticipateView } from "./sessions";
 import { Header } from './common'
 import { HomeView } from "./home";
-import { LoginView } from "./auth";
+import { LoginView , RegisterView } from "./auth";
 
 
 export default () => (
-    <BrowserRouter>
+    <BrowserRouter basename=''>
         <Header />
         <Switch>
+            <AuthenticatedRoute path='/sessions/:sessionId/participate' component={SessionParticipateView} />
             <AuthenticatedRoute path='/sessions' component={SessionListView} />
             <UnauthenticatedRoute exact path="/login" component={LoginView} />
+            <UnauthenticatedRoute exact path="/register" component={RegisterView} />
             <UnauthenticatedRoute exact path="/" component={HomeView} />
         </Switch>
     </BrowserRouter>

@@ -1,15 +1,16 @@
 
-import React, { Component } from "react";
-import { Redirect } from "react-router";
-import axios from "axios";
+import React, { Component } from 'react';
+import { Redirect } from 'react-router';
+import { Link } from 'react-router-dom';
+
+import { AuthService } from '.'
 
 export default class LoginForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: "",
-      password: "",
-      loginErrors: "",
+      email: '',
+      password: '',
       redirectToReferrer: false
     };
 
@@ -17,40 +18,28 @@ export default class LoginForm extends Component {
                             ? this.props.location.state
                             : { referrer: '/sessions' };
     this.state.referrer = referrer;
-
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleChange = this.handleChange.bind(this);
   }
 
-  handleChange(event) {
+  handleChange = (event) => {
     this.setState({
       [event.target.name]: event.target.value
     });
   }
 
-  handleSubmit(event) {
+  handleSubmit = (event) => {
+    event.preventDefault();
     const { email, password } = this.state;
 
-    axios
-      .post(
-        "/api/auth/login",
-        {
-          email: email,
-          password: password
-        }
-      )
-      .then(response => {
-        if (response.data.user) {
-          localStorage.setItem("token", response.data.jwt);
-        }
-        this.setState({
-          redirectToReferrer: true
-        });
-      })
-      .catch(error => {
-        console.log("login error", error);
-      });
-    event.preventDefault();
+    this.login(email, password);
+  }
+
+  login = async (email, password) => {
+    const { user, jwt } = await AuthService.authenticate(email, password);
+
+    AuthService.setAppUser(user, jwt);
+    this.setState({
+      redirectToReferrer: true,
+    })
   }
 
   render() {
@@ -64,25 +53,26 @@ export default class LoginForm extends Component {
       <div>
         <form onSubmit={this.handleSubmit}>
           <input
-            type="email"
-            name="email"
-            placeholder="Email"
+            type='email'
+            name='email'
+            placeholder='Email'
             value={this.state.email}
             onChange={this.handleChange}
             required
           />
 
           <input
-            type="password"
-            name="password"
-            placeholder="Password"
+            type='password'
+            name='password'
+            placeholder='Password'
             value={this.state.password}
             onChange={this.handleChange}
             required
           />
 
-          <button type="submit">Login</button>
+          <button type='submit'>Login</button>
         </form>
+        <Link to='/register'><button>Register</button></Link>
       </div>
     );
   }

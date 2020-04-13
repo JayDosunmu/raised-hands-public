@@ -1,59 +1,48 @@
 import React from "react";
-import Stomp from 'stompjs'
+import { Link } from 'react-router-dom';
+
+import { SessionService } from '.';
 
 export default class SessionListView extends React.Component {
   constructor(props) {
       super(props);
       this.state = {
-          websocketUrl: "ws://localhost:8080/api/connect",
-          websocket: null,
-          participants: {}
+          sessions: {}
       };
   }
 
   componentDidMount() {
-    this.connectWebsocket(this.state.websocketUrl);
+    this.getUserSessions();
   }
 
-  addParticipant = (participant) => {
-      const participants = this.state.participants;
-      participants[participant.sessionParticipantId] = participant;
+  getUserSessions = async () => {
+      const sessions = {};
+      try {
+        const sessionsResponse = await SessionService.getUserSessions();
+        sessionsResponse.forEach((session) => {
+            sessions[session.sessionId] = session;
+        });
+      } catch (error) {
+        console.log(error);
+      }
+
       this.setState({
-          participants
+          sessions
       });
 
-  }
-
-  connectWebsocket = (websocketUrl) => {
-      try {
-          const websocket = Stomp.client(websocketUrl);
-          websocket.connect({}, e => {
-              console.log("connected to websocket: " + websocketUrl);
-
-              websocket.subscribe("/topic/session/3", message => {
-                  console.log(JSON.parse(message.body))
-                  this.addParticipant(JSON.parse(message.body));
-              })
-          });
-          this.setState({
-              websocket
-          });
-      } catch(error) {
-          console.log("unable to connect to websocket: " + error.message);
-          console.log(error);
-      }
   }
 
   render() {
       return (
           <div>
-              <div>Connected to {this.state.websocketUrl}</div>
+              <div>Your Sessions</div>
               <ul>
               {
-                  Object.entries(this.state.participants).map(([participantId, participant]) => {
+                  Object.entries(this.state.sessions).map(([sessionId, session]) => {
+                      console.log(sessionId);
                     return(
-                      <li key={participantId}>
-                        {participant.account.email}
+                      <li key={sessionId}>
+                        <Link to={`sessions/${sessionId}/participate`}>{session.name}</Link>
                       </li>
                   )})
               }
