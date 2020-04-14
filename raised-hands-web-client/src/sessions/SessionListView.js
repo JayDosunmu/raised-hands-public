@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, Redirect } from 'react-router-dom';
 
-import { CreateSessionForm, JoinSessionForm, SessionService } from '.';
+import { CreateSessionForm, JoinSessionForm, SessionService, SessionIdDisplay } from '.';
 
 export default class SessionListView extends React.Component {
   constructor(props) {
@@ -64,7 +64,7 @@ export default class SessionListView extends React.Component {
               {
                   Object.entries(this.state.sessions).map(([sessionId, session]) => (
                       <li key={sessionId}>
-                        <Link to={`sessions/${sessionId}/participate`}>{session.name}: {session.joinId}[{session.passcode}]</Link>
+                        <Link to={`sessions/${sessionId}/participate`}>{session.name}: <SessionIdDisplay joinId={session.joinId} />[{session.passcode}]</Link>
                       </li>
                   ))
               }

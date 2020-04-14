@@ -8,17 +8,18 @@ import java.security.SecureRandom;
 public class SessionUtil {
 
     //TODO: Make values configurable
-    private static final char[] ch = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
+    private static final char[] alphanum = "0123456789ABCDEFGHJKMNPQRSTUVWXYZ".toCharArray();
+    private static final char[] digits = "0123456789".toCharArray();
 
     public static String generateSessionId() {
-        return generateSecureRandomString(9);
+        return generateSecureRandomString(9, alphanum);
     }
 
     public static String generateSessionPasscode() {
-        return generateSecureRandomString(6);
+        return generateSecureRandomString(6, digits);
     }
 
-    private static String generateSecureRandomString(int len) {
+    private static String generateSecureRandomString(int len, char[] ch) {
         //TODO: Make values configurable
         char[] c = new char[len];
         SecureRandom random = new SecureRandom();
