@@ -1,14 +1,14 @@
 import React from "react";
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
-import { SessionService } from '.';
-import CreateSessionForm from "./CreateSessionForm";
+import { CreateSessionForm, JoinSessionForm, SessionService } from '.';
 
 export default class SessionListView extends React.Component {
   constructor(props) {
       super(props);
       this.state = {
-          sessions: {}
+          sessionId: null,
+          sessions: {},
       };
   }
 
@@ -23,6 +23,13 @@ export default class SessionListView extends React.Component {
     this.setState({
       sessions
     });
+  }
+
+  joinSession = (session) => {
+    const { sessionId } = session;
+    this.setState({
+      sessionId
+    })
   }
 
   getUserSessions = async () => {
@@ -43,16 +50,21 @@ export default class SessionListView extends React.Component {
   }
 
   render() {
-      return (
+      return this.state.sessionId
+      ? (<Redirect to={`sessions/${this.state.sessionId}/participate`} />)
+      : (
           <div>
               Create Session:
               <CreateSessionForm addSession={this.addSession} />
+              <br />
+              <JoinSessionForm joinSession={this.joinSession} />
+              <br />
               <div>Your Sessions</div>
               <ul>
               {
                   Object.entries(this.state.sessions).map(([sessionId, session]) => (
                       <li key={sessionId}>
-                        <Link to={`sessions/${sessionId}/participate`}>{session.name}</Link>
+                        <Link to={`sessions/${sessionId}/participate`}>{session.name}: {session.joinId}[{session.passcode}]</Link>
                       </li>
                   ))
               }

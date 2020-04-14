@@ -37,8 +37,17 @@ async function getSession(sessionId) {
     return getSessionResponse.data;
 }
 
+async function joinSession(joinId, passcode) {
+    const joinSession = await http.post(`/session/join`, {
+        joinId,
+        passcode
+    });
+    return joinSession.data;
+}
+
 export {
     createSession,
     getSession,
     getUserSessions,
+    joinSession,
 };
