@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from 'react-router-dom';
 
 import { SessionService } from '.';
+import CreateSessionForm from "./CreateSessionForm";
 
 export default class SessionListView extends React.Component {
   constructor(props) {
@@ -13,6 +14,15 @@ export default class SessionListView extends React.Component {
 
   componentDidMount() {
     this.getUserSessions();
+  }
+
+  addSession = (session) => {
+    const { sessions } = this.state;
+    sessions[session.sessionId] = session;
+
+    this.setState({
+      sessions
+    });
   }
 
   getUserSessions = async () => {
@@ -35,6 +45,8 @@ export default class SessionListView extends React.Component {
   render() {
       return (
           <div>
+              Create Session:
+              <CreateSessionForm addSession={this.addSession} />
               <div>Your Sessions</div>
               <ul>
               {

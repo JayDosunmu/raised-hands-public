@@ -5,6 +5,17 @@ function formatConnectUrl(websocketUrl) {
     return `ws://localhost:8080${websocketUrl}`
 }
 
+async function createSession(name, distractionFree, startDate, endDate) {
+    const url = '/session';
+    const createSessionResponse = await http.post(url, {
+        name,
+        distractionFree,
+        startDate,
+        endDate,
+    });
+    return createSessionResponse.data;
+}
+
 async function getUserSessions(userId) {
     const url = `/session${ userId ? '/' : ''}${userId || ''}`;
     const getSessionsResponse = await http.get(url);
@@ -27,6 +38,7 @@ async function getSession(sessionId) {
 }
 
 export {
+    createSession,
     getSession,
     getUserSessions,
 };
