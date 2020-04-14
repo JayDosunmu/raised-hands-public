@@ -1,5 +1,6 @@
 import React from 'react';
 import Stomp from 'stompjs';
+import { InteractionEvents, SessionParticipantCard, SessionService } from '.';
 
 import { SessionService } from '.';
 
@@ -26,9 +27,11 @@ export default class SessionParticipateView extends React.Component {
     }
 
     componentWillUnmount() {
-        const { websocket, subscribeUrl } = this.state.websocketData;
-        websocket.unsubscribe(subscribeUrl);
-        websocket.disconnect();
+        if (this.state.websocketData){
+            const { websocket, subscribeUrl } = this.state.websocketData;
+            websocket.unsubscribe(subscribeUrl);
+            websocket.disconnect();
+        }
     }
 
     getSession = async (sessionId) => {
@@ -79,7 +82,7 @@ export default class SessionParticipateView extends React.Component {
                     Object.entries(this.state.participants)
                         .sort(([idx1, p1], [idx2, p2]) => (p1.sessionParticipantId - p2.sessionParticipantId))
                         .map(([_, participant]) =>
-                            <li key={participant.sessionParticipantId}>{participant.account.email}</li>
+                            <SessionParticipantCard participant={participant} key={participant.sessionParticipantId}/>
                         )
                 }
                 </ul>
