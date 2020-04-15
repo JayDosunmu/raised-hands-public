@@ -2,7 +2,6 @@ import React from 'react';
 import Stomp from 'stompjs';
 import { InteractionEvents, SessionParticipantCard, SessionService } from '.';
 
-import { SessionService } from '.';
 
 export default class SessionParticipateView extends React.Component {
     constructor(props) {
@@ -77,6 +76,7 @@ export default class SessionParticipateView extends React.Component {
         return (
             <div>
                 <div>Participants</div>
+                <InteractionEvents></InteractionEvents>
                 <ul>
                 {
                     Object.entries(this.state.participants)
