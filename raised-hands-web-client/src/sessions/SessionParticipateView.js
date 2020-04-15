@@ -26,7 +26,7 @@ export default class SessionParticipateView extends React.Component {
     }
 
     componentWillUnmount() {
-        if (this.state.websocketData){
+        if (this.state.websocketData) {
             const { websocket, subscribeUrl } = this.state.websocketData;
             websocket.unsubscribe(subscribeUrl);
             websocket.disconnect();
@@ -39,7 +39,7 @@ export default class SessionParticipateView extends React.Component {
         this.connectWebsocket(sessionData.websocketData);
     }
 
-    connectWebsocket = ({connectUrl, topicUrl, appUrl }) => {
+    connectWebsocket = ({ connectUrl, topicUrl, appUrl }) => {
         try {
             const websocket = Stomp.client(connectUrl);
             websocket.connect({}, e => {
@@ -56,7 +56,7 @@ export default class SessionParticipateView extends React.Component {
                     subscribeUrl: topicUrl,
                 }
             });
-        } catch(error) {
+        } catch (error) {
             console.log("unable to connect to websocket: " + error.message);
         }
     }
@@ -74,18 +74,39 @@ export default class SessionParticipateView extends React.Component {
 
     render() {
         return (
-            <div>
-                <div>Participants</div>
-                <InteractionEvents></InteractionEvents>
-                <ul>
-                {
-                    Object.entries(this.state.participants)
-                        .sort(([idx1, p1], [idx2, p2]) => (p1.sessionParticipantId - p2.sessionParticipantId))
-                        .map(([_, participant]) =>
-                            <SessionParticipantCard participant={participant} key={participant.sessionParticipantId}/>
-                        )
-                }
-                </ul>
+
+            <div className="row">
+                <div className="col-sm">
+
+                    <div className="col-sm">
+                        <div className="InteractionEvents">
+                            <InteractionEvents></InteractionEvents>
+                        </div>
+                    </div>
+
+                    <footer className="fixed-bottom">
+                        <div className="form-group">
+                            <div className="text-box">
+                                <label htmlFor="TextArea">Ask Question</label>
+                                <textarea className="form-control" id="TextArea" rows="5"></textarea>
+                            </div>
+                        </div>
+                    </footer>
+
+                    <ul className="col-sm" >
+                        <div className="ParticipantsColumn">
+
+                            <h2>Participants</h2>
+                            {
+                                Object.entries(this.state.participants)
+                                    .sort(([idx1, p1], [idx2, p2]) => (p1.sessionParticipantId - p2.sessionParticipantId))
+                                    .map(([_, participant]) =>
+                                        <SessionParticipantCard participant={participant} key={participant.sessionParticipantId} />
+                                    )
+                            }
+                        </div>
+                    </ul>
+                </div>
             </div>
         );
     }

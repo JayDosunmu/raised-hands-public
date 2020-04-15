@@ -4,21 +4,21 @@ export default class SessionParticipateCard extends React.Component {
     constructor(props) {
         super(props);
         console.log(props);
-
     }
-
     render() {
+        let studentName = this.props.participant.account.name;
+        let leaderStatus = "Leader = " + (this.props.participant.leader).toString();
+
         return (
-         
-            <div className="card text-white bg-success mb-3"  style={{maxWidth: '18em', maxHeight: '20em'}}>
-                <div className="card-header">Header</div>
+            <div className="card text-white bg-success mb-3" style={{ maxWidth: '18em', maxHeight: '20em' }}>
+                <h4 className="card-header">{studentName}</h4>
                 <div className="card-body">
-                    <h5 className="card-title">Success card title</h5>
-                    <p className="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    {this.props.participant.leader && <h5 className="card-title">{leaderStatus} </h5>}
+                    <p className="card-text"></p>
                 </div>
             </div>
 
-       
+
         );
     }
 

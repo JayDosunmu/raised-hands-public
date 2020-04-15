@@ -13,10 +13,7 @@ export default class InteractionEvents extends React.Component {
                 
                 <ul>
                     <h2>INTERACTION COLUMN</h2>
-                    <div className="form-group" style={{maxWidth: '40em'}}>
-                        <label htmlFor="exampleFormControlTextarea1">Ask Question</label>
-                        <textarea className="form-control"  id="exampleFormControlTextarea1" rows="5"></textarea>
-                    </div>
+                  
                 </ul>
 
             </div>
