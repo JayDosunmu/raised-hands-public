@@ -81,7 +81,7 @@ public class SessionServiceImpl implements SessionService {
 
     @Override
     public Map<String, Object> join(String joinId, String passcode, Account account) throws IllegalArgumentException {
-        Session session = sessionRepository.findByJoinId(joinId)
+        Session session = sessionRepository.findByJoinId(joinId.toUpperCase())
                 .orElseThrow(() -> new IllegalArgumentException("Session not found"));
 
         SessionParticipant participant = sessionParticipantRepository

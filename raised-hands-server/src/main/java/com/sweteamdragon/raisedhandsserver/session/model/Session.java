@@ -3,7 +3,6 @@ package com.sweteamdragon.raisedhandsserver.session.model;
 import com.sweteamdragon.raisedhandsserver.session.util.SessionUtil;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;

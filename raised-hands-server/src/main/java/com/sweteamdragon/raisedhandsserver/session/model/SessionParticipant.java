@@ -22,7 +22,7 @@ public class SessionParticipant {
     @ManyToOne
     private Account account;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
     private Session session;
 
     private boolean leader;
