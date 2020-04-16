@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface InteractionsRepository extends JpaRepository<Session, Long> {
+public interface InteractionRepository extends JpaRepository<Session, Long> {
 }

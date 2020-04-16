@@ -10,7 +10,7 @@ import javax.persistence.*;
 @ToString
 @Getter
 @Setter
-public class interactions{
+public class Interaction{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long interactionId;
@@ -29,7 +29,7 @@ public class interactions{
 
     private int vote;
 
-    public interactions(long interactionId, String message, Session session, SessionParticipant sessionParticipant,
+    public Interaction(long interactionId, String message, Session session, SessionParticipant sessionParticipant,
                         Date timestamp, int vote) {
         this.interactionId = interactionId;
         this.message = message;
