@@ -29,9 +29,8 @@ public class Interaction{
 
     private int vote;
 
-    public Interaction(long interactionId, String message, Session session, SessionParticipant sessionParticipant,
+    public Interaction(String message, Session session, SessionParticipant sessionParticipant,
                         Date timestamp, int vote) {
-        this.interactionId = interactionId;
         this.message = message;
         this.session = session;
         this.sessionParticipant = sessionParticipant;
