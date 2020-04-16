@@ -14,6 +14,7 @@ code {
 
 .navbar-custom {
   background-color: #32be8f;
+  color: black
 }
 
 .navbar-text {
@@ -21,8 +22,30 @@ code {
 }
 
 .ParticipantsColumn {
-  background-color: #bdbdbd;
+  background-color: #292b2c;
+  height: 300%;
 }
 .InteractionEvents {
   background-color: red;
+  height: 300%;
+}
+
+.ParticipantsColumnHeader{
+  background-color: #279772;
+}
+
+.InteractionEventsHeaderTitle{
+  text-align: center;
+  background-color: #279772
+}
+
+.Ask-Question{
+
+}
+
+.textColor{
+  color: white;
+}
+Link.selected {
+  color:white;
 }

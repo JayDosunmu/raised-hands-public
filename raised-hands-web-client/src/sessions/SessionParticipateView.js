@@ -74,29 +74,15 @@ export default class SessionParticipateView extends React.Component {
 
     render() {
         return (
+            <div className="container-12">
+                <div className="row">
 
-            <div className="row">
-                <div className="col-sm">
-
-                    <div className="col-sm">
-                        <div className="InteractionEvents">
-                            <InteractionEvents></InteractionEvents>
-                        </div>
-                    </div>
-
-                    <footer className="fixed-bottom">
-                        <div className="form-group">
-                            <div className="text-box">
-                                <label htmlFor="TextArea">Ask Question</label>
-                                <textarea className="form-control" id="TextArea" rows="5"></textarea>
-                            </div>
-                        </div>
-                    </footer>
-
-                    <ul className="col-sm" >
+                    <ul className="col-2" >
                         <div className="ParticipantsColumn">
 
+                        <div className = "ParticipantsColumnHeader">
                             <h2>Participants</h2>
+                        </div>
                             {
                                 Object.entries(this.state.participants)
                                     .sort(([idx1, p1], [idx2, p2]) => (p1.sessionParticipantId - p2.sessionParticipantId))
@@ -106,6 +92,13 @@ export default class SessionParticipateView extends React.Component {
                             }
                         </div>
                     </ul>
+
+                        <div className="col-10">
+                        <div className="InteractionEvents">
+                            <InteractionEvents />
+                        </div>
+                    </div>
+
                 </div>
             </div>
         );
