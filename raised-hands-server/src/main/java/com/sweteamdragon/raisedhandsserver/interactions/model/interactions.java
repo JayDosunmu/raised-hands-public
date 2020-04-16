@@ -13,35 +13,29 @@ import javax.persistence.*;
 public class interactions{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private String interactionEventId;
+    private long interactionId;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private String message;
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Session session;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private SessionParticipant sessionParticipant;
 
-    private int timestamp;  //date
-
-    private String text;
-
-    private byte multimedia;
-
-    private int flags;  //Bitmask
+    @CreationTimestamp
+    @TeMPOraL(TemporalType.TIMESTAMP)
+    private Date timestamp;  //date
 
     private int vote;
 
-    public interactions(String interactionEventId, Session session, SessionParticipant sessionParticipant,
-                        int timestamp, String text, byte multimedia, int flags, int vote) {
-        this.interactionEventId = interactionEventId;
+    public interactions(long interactionId, String message, Session session, SessionParticipant sessionParticipant,
+                        Date timestamp, int vote) {
+        this.interactionId = interactionId;
+        this.message = message;
         this.session = session;
         this.sessionParticipant = sessionParticipant;
-
         this.timestamp = timestamp;
-        this.text = text;
-        this.multimedia = multimedia;
-        this.flags = flags;
         this.vote = vote;
     }
-}
 }
