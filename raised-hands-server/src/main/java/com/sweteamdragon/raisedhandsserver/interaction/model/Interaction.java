@@ -1,8 +1,10 @@
 package com.sweteamdragon.raisedhandsserver.session.model;
 
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @AllArgsConstructor
@@ -15,8 +17,6 @@ public class Interaction{
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long interactionId;
 
-    private String message;
-
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Session session;
 
@@ -24,8 +24,10 @@ public class Interaction{
     private SessionParticipant sessionParticipant;
 
     @CreationTimestamp
-    @TeMPOraL(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date timestamp;  //date
+
+    private String message;
 
     private int vote;
 
