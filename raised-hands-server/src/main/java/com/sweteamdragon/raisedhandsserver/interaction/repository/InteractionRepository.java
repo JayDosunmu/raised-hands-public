@@ -1,4 +1,4 @@
-package com.sweteamdragon.raisedhandsserver.session.repository;
+package com.sweteamdragon.raisedhandsserver.interaction.repository;
 
 import com.sweteamdragon.raisedhandsserver.session.model.Session;
 import org.springframework.data.jpa.repository.JpaRepository;

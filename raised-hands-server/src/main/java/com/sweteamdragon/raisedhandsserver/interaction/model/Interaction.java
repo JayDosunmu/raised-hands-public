@@ -1,5 +1,7 @@
-package com.sweteamdragon.raisedhandsserver.session.model;
+package com.sweteamdragon.raisedhandsserver.interaction.model;
 
+import com.sweteamdragon.raisedhandsserver.session.model.Session;
+import com.sweteamdragon.raisedhandsserver.session.model.SessionParticipant;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
