@@ -1,23 +1,31 @@
 version: '3'
 services:
+  frontend:
+    build: ./raised-hands-web-client/
+    container_name: raised-hands-web-client
+    command: ["npm", "start"]
+    restart: on-failure
+    volumes:
+      - ./raised-hands-web-client:/app
+    ports:
+      - "80:5000"
+    expose:
+      - "3000"
+    networks:
+      - main
+    depends_on:
+      - backend
+
   backend:
     build:
       context: ./raised-hands-server/
-      dockerfile: Dockerfile.dev
     container_name: raised-hands-server
-    command: ["gradle", "bootRun", "--args='--spring.profiles.active=dev'"]
+    command: ["java", "-jar", "app.jar"]
     restart: on-failure
-    volumes:
-      - ./raised-hands-server:/app
-    ports:
-      - "5005:5005"
-      - "8080:8080"
     expose:
       - "8080"
     networks:
       - main
-    depends_on:
-      - db
     environment:
       - SPRING_DATASOURCE_URL="${DB_URL}"
       - SPRING_DATASOURCE_USERNAME="${DB_USER}"
@@ -26,24 +34,8 @@ services:
       - SECURITY_EXPIRATION_TIME
       - SECURITY_TOKEN_PREFIX
       - SECURITY_HEADER_STRING
-
-  frontend:
-    build:
-      context: ./raised-hands-web-client/
-      dockerfile: Dockerfile.dev
-    container_name: raised-hands-web-client
-    command: ["npm", "start"]
-    restart: on-failure
-    volumes:
-      - ./raised-hands-web-client:/app
-    ports:
-      - "3000:3000"
-    expose:
-      - "3000"
-    networks:
-      - main
     depends_on:
-      - backend
+    - db
 
   db:
     image: postgres:latest
