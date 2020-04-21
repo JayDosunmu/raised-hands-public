@@ -74,7 +74,7 @@ export default class SessionParticipateView extends React.Component {
 
     render() {
         return (
-            <div className="container-12">
+          
                 <div className="row">
 
                     <ul className="col-2" >
@@ -100,7 +100,7 @@ export default class SessionParticipateView extends React.Component {
                     </div>
 
                 </div>
-            </div>
+            
         );
     }
 }

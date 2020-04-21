@@ -13,8 +13,8 @@ code {
 }
 
 .navbar-custom {
-  background-color: #32be8f;
-  color: black
+  background-color: #363636;
+  color: white
 }
 
 .navbar-text {
@@ -26,7 +26,7 @@ code {
   height: 300%;
 }
 .InteractionEvents {
-  background-color: red;
+  background-color: white;
   height: 300%;
 }
 
@@ -34,18 +34,16 @@ code {
   background-color: #279772;
 }
 
-.InteractionEventsHeaderTitle{
-  text-align: center;
-  background-color: #279772
-}
-
-.Ask-Question{
-
-}
 
 .textColor{
   color: white;
 }
-Link.selected {
+
+.LinkIe{
   color:white;
+  font-weight: bold;
+}
+.container-navbar{
+
+
 }

@@ -9,28 +9,20 @@ export default class InteractionEvents extends React.Component {
 
 render() {
     return (
-        <div>
-        <div className = "Ask-Question">
-            <footer className="fixed-bottom">
-                <div className="form-group">
-                    <div className="text-box">
-                        <label htmlFor="TextArea" className = "textColor">Ask Question</label>
-                        <textarea className="form-control" id="TextArea" rows="5"></textarea>
-                        <button type="submit" class="btn btn-primary mb-2">Send</button>
-                    </div>
-                </div>
-            </footer>
 
-            <div>
-               
-            </div>
-        </div>
-        
-        <div className = "InteractionEventsHeaderTitle">
-         <h2>Class Room</h2>
-         </div>
-
-         </div>
+<div className = "Textbox_at_Bottom">
+ <footer className = "fixed-bottom offset-sm-2">
+<div class="col-md-12">
+<div class="input-group mb-3">
+  <div class="input-group-prepend">
+    <button class="btn btn-secondary active" type="button">Submit</button>
+  </div>
+  <input type="text" class="form-control" placeholder="" aria-label="" aria-describedby="basic-addon1">
+      </input>
+</div>
+</div>
+</footer> 
+</div>  
     );
 }
 
