@@ -16,16 +16,21 @@ services:
       - "8080"
     networks:
       - main
-    depends_on:
-      - db
     environment:
-      - SPRING_DATASOURCE_URL="${DB_URL}"
-      - SPRING_DATASOURCE_USERNAME="${DB_USER}"
-      - SPRING_DATASOURCE_PASSWORD="${DB_PASSWORD}"
+      - SPRING_DATASOURCE_URL=${DB_URL}
+      - SPRING_DATASOURCE_USERNAME=${DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - SPRING_JPA_DDL_AUTO
+      - CLOUD_SQL_DB_NAME
+      - CLOUD_SQL_INSTANCE_CONNECTION_NAME
+      - CLOUD_SQL_PROJECT_ID
+      - CLOUD_CREDENTIALS_FILE
       - SECURITY_SECRET_KEY
       - SECURITY_EXPIRATION_TIME
       - SECURITY_TOKEN_PREFIX
       - SECURITY_HEADER_STRING
+    depends_on:
+      - db
 
   frontend:
     build:
@@ -42,6 +47,8 @@ services:
       - "3000"
     networks:
       - main
+    environment:
+      - REACT_APP_API_URL
     depends_on:
       - backend
 
@@ -58,8 +65,8 @@ services:
     volumes:
       - ./pgdata:/var/lib/postgresql/data
     environment:
-      - POSTGRES_USER="${DB_USER}"
-      - POSTGRES_PASSWORD="${DB_PASSWORD}"
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
 
 networks:
   main:
