@@ -5,11 +5,12 @@ import LogoutButton from '../auth/LogoutButton';
 
 
 export default () => (
-    <div>
+
+    <nav className="navbar navbar-custom">
         <Route path='/sessions/:sessionId/participate' render={(props) => (
-            <Link to='/sessions'>Back to Sessions</Link>
+            <Link className ="LinkIe"to='/sessions'>Back to Sessions </Link>
         )} />
-        Header
+        <h2>RAISED HANDS </h2>
         <LogoutButton />
-    </div>
+    </nav>
 );

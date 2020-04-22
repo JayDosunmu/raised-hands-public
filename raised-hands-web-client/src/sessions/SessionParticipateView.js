@@ -1,7 +1,7 @@
 import React from 'react';
 import Stomp from 'stompjs';
+import { InteractionEvents, SessionParticipantCard, SessionService } from '.';
 
-import { SessionService } from '.';
 
 export default class SessionParticipateView extends React.Component {
     constructor(props) {
@@ -26,9 +26,11 @@ export default class SessionParticipateView extends React.Component {
     }
 
     componentWillUnmount() {
-        const { websocket, subscribeUrl } = this.state.websocketData;
-        websocket.unsubscribe(subscribeUrl);
-        websocket.disconnect();
+        if (this.state.websocketData) {
+            const { websocket, subscribeUrl } = this.state.websocketData;
+            websocket.unsubscribe(subscribeUrl);
+            websocket.disconnect();
+        }
     }
 
     getSession = async (sessionId) => {
@@ -37,7 +39,7 @@ export default class SessionParticipateView extends React.Component {
         this.connectWebsocket(sessionData.websocketData);
     }
 
-    connectWebsocket = ({connectUrl, topicUrl, appUrl }) => {
+    connectWebsocket = ({ connectUrl, topicUrl, appUrl }) => {
         try {
             const websocket = Stomp.client(connectUrl);
             websocket.connect({}, e => {
@@ -54,7 +56,7 @@ export default class SessionParticipateView extends React.Component {
                     subscribeUrl: topicUrl,
                 }
             });
-        } catch(error) {
+        } catch (error) {
             console.log("unable to connect to websocket: " + error.message);
         }
     }
@@ -72,18 +74,33 @@ export default class SessionParticipateView extends React.Component {
 
     render() {
         return (
-            <div>
-                <div>Participants</div>
-                <ul>
-                {
-                    Object.entries(this.state.participants)
-                        .sort(([idx1, p1], [idx2, p2]) => (p1.sessionParticipantId - p2.sessionParticipantId))
-                        .map(([_, participant]) =>
-                            <li key={participant.sessionParticipantId}>{participant.account.email}</li>
-                        )
-                }
-                </ul>
-            </div>
+          
+                <div className="row">
+
+                    <ul className="col-2" >
+                        <div className="ParticipantsColumn">
+
+                        <div className = "ParticipantsColumnHeader">
+                            <h2>Participants</h2>
+                        </div>
+                            {
+                                Object.entries(this.state.participants)
+                                    .sort(([idx1, p1], [idx2, p2]) => (p1.sessionParticipantId - p2.sessionParticipantId))
+                                    .map(([_, participant]) =>
+                                        <SessionParticipantCard participant={participant} key={participant.sessionParticipantId} />
+                                    )
+                            }
+                        </div>
+                    </ul>
+
+                        <div className="col-10">
+                        <div className="InteractionEvents">
+                            <InteractionEvents />
+                        </div>
+                    </div>
+
+                </div>
+            
         );
     }
 }
