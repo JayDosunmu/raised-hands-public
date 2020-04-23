@@ -10,12 +10,11 @@ TBD
 ---
 ## How to set up locally
 
-This project has 3 main components: a web server, a web client, and a mobile app. Below, steps are given for setting them up on your own machine.
+This project has 2 main components: a web server, and a web client. Below, steps are given for setting them up on your own machine.
 
 ---
 #### Dependencies:
 * Java 8 (JDK + JRE)
-* Android Studio
 * Node >= 12
 * Docker
 
@@ -94,12 +93,6 @@ This project has 3 main components: a web server, a web client, and a mobile app
     ```
 3. You can now view the web-client at `localhost:3000`
 
-### Raised-Hands Android app
-
-1. Open the `raised-hands-android` project in `Android Studio`
-
-2. Run the app using the `run app` button or `^R`
-
 ---
 ## How to test
 
@@ -117,13 +110,6 @@ From `raised-hands-web-client` directory, execute:
 $ npm test
 ```
 
-### Raised-Hands Android app
-
-From  `raised-hands-android` directory, execute:
-```
-$ ./gradlew test
-```
-
 ---
 ## How to deploy
 
@@ -132,10 +118,6 @@ $ ./gradlew test
 `TODO`
 
 ### Raised-Hands web client
-
-`TODO`
-
-### Raised-Hands Android app
 
 `TODO`
 

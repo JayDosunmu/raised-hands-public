@@ -5,3 +5,4 @@ pgdata
 
 .project
 
+secrets/**

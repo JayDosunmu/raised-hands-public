@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const http = axios.create({
-    baseURL: '/api',
+    baseURL: process.env.REACT_APP_API_URL? '' : 'http://api.raisedhands.io',
     headers: { 'Content-Type': 'application/json' },
 })
 

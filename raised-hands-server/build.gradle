@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.swe-team-dragon'
-version = '0.0.1-SNAPSHOT'
+version = '0.0.7-SNAPSHOT'
 sourceCompatibility = '1.8'
 
 configurations {
@@ -26,12 +26,12 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-logging'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.security:spring-security-messaging'
     implementation 'org.springframework.security:spring-security-test'
     implementation 'org.liquibase:liquibase-core'
+//    implementation 'org.springframework.cloud:spring-cloud-gcp-starter-sql-postgresql:1.2.2.RELEASE'
     compile('org.modelmapper:modelmapper:1.1.0')
     compile('com.auth0:java-jwt:3.4.0')
     compileOnly 'org.projectlombok:lombok'

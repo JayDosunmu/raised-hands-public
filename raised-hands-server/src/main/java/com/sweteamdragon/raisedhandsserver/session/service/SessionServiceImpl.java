@@ -109,7 +109,7 @@ public class SessionServiceImpl implements SessionService {
         SessionResponseDto sessionResponseDto = modelMapper.map(session, SessionResponseDto.class);
         sessionResponseDto.setWebsocketData(
                 new SessionMessagingMetadataDto(
-                        "/api/connect",
+                        "/connect",
                         this.getSessionTopicUrl(session),
                         this.getSessionAppUrl(session)
                 )

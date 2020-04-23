@@ -1,0 +1,57 @@
+version: '3'
+services:
+  frontend:
+    build: ./raised-hands-web-client/
+    container_name: raised-hands-web-client
+    command: ["npm", "start"]
+    restart: on-failure
+    volumes:
+      - ./raised-hands-web-client:/app
+    ports:
+      - "80:5000"
+    expose:
+      - "3000"
+    networks:
+      - main
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./raised-hands-server/
+    container_name: raised-hands-server
+    command: ["java", "-jar", "app.jar"]
+    restart: on-failure
+    expose:
+      - "8080"
+    networks:
+      - main
+    environment:
+      - SPRING_DATASOURCE_URL="${DB_URL}"
+      - SPRING_DATASOURCE_USERNAME="${DB_USER}"
+      - SPRING_DATASOURCE_PASSWORD="${DB_PASSWORD}"
+      - SECURITY_SECRET_KEY
+      - SECURITY_EXPIRATION_TIME
+      - SECURITY_TOKEN_PREFIX
+      - SECURITY_HEADER_STRING
+    depends_on:
+    - db
+
+  db:
+    image: postgres:latest
+    container_name: postgres
+    restart: on-failure
+    ports:
+      - "5432:5432"
+    expose:
+      - "5432"
+    networks:
+      - main
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER="${DB_USER}"
+      - POSTGRES_PASSWORD="${DB_PASSWORD}"
+
+networks:
+  main:

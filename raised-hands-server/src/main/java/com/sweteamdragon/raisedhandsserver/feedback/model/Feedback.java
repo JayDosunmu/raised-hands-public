@@ -22,9 +22,7 @@ public class Feedback { //system modeling diagram
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private SessionParticipant sessionParticipant;
 
-    private double numericalScore:
-
-    //private String predefinedOptions;
+    private double numericalScore;
 
     private String customMessage;
 
