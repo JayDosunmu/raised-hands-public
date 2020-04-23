@@ -5,6 +5,7 @@ import com.sweteamdragon.raisedhandsserver.auth.security.JwtAuthorizationFilter;
 import com.sweteamdragon.raisedhandsserver.auth.security.JwtUtil;
 import com.sweteamdragon.raisedhandsserver.auth.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -23,6 +24,12 @@ import java.util.Arrays;
 @Component
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Value("${com.sweteamdragon.raised-hands.allowed-origins}")
+    String allowedOriginsListString;
+
+    @Value("${com.sweteamdragon.raised-hands.allowed-methods}")
+    String allowedMethodsListString;
 
     @Autowired
     AccountService accountService;
@@ -64,8 +71,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("http://raisedhands.io", "http://localhost"));
-        configuration.setAllowedMethods(Arrays.asList("*"));
+        configuration.setAllowedOrigins(Arrays.asList(allowedOriginsListString.split(",")));
+        configuration.setAllowedMethods(Arrays.asList(allowedMethodsListString.split(",")));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;

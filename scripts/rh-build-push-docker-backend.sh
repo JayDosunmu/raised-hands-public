@@ -34,8 +34,12 @@ done
 
 echo Building and registering backend version: $VERSION
 
+rm -f raised-hands-server/build/libs/*
+
 ./scripts/rh-build-backend.sh $SKIP_TESTS
 if [ $? -ne 0 ]; then { echo "Failed to create build, aborting." ; exit 42; } fi
 
 docker build -t gcr.io/raised-hands-274417/raised-hands-backend:$VERSION ./raised-hands-server/
+if [ $? -ne 0 ]; then { echo "Failed to containerize backend, aborting." ; exit 42; } fi
+
 docker push gcr.io/raised-hands-274417/raised-hands-backend:$VERSION

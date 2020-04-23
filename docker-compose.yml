@@ -29,6 +29,8 @@ services:
       - SECURITY_EXPIRATION_TIME
       - SECURITY_TOKEN_PREFIX
       - SECURITY_HEADER_STRING
+      - SECURITY_ALLOWED_ORIGINS
+      - SECURITY_ALLOWED_METHODS
     depends_on:
       - db
 

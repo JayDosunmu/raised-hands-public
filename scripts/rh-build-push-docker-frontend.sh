@@ -38,4 +38,6 @@ echo Building and registering frontend version: $VERSION
 if [ $? -ne 0 ]; then { echo "Failed to create build, aborting." ; exit 42; } fi
 
 docker build -t gcr.io/raised-hands-274417/raised-hands-frontend:$VERSION ./raised-hands-web-client/
+if [ $? -ne 0 ]; then { echo "Failed to containerize frontend, aborting." ; exit 42; } fi
+
 docker push gcr.io/raised-hands-274417/raised-hands-frontend:$VERSION
