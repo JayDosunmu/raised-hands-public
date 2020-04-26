@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.swe-team-dragon'
-version = '0.0.7-SNAPSHOT'
+version = rootProject.file('version').text.trim()
 sourceCompatibility = '1.8'
 
 configurations {
