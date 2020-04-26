@@ -5,6 +5,7 @@ import SessionListView from './SessionListView';
 import SessionParticipateView from './SessionParticipateView';
 import SessionParticipantCard from './SessionParticipantCard';
 import InteractionEvents from './InteractionEvents';
+import ParticipantsColumn from './ParticipantsColumn'
 
 export {
     CreateSessionForm,
@@ -13,5 +14,6 @@ export {
     SessionParticipateView,
     SessionService,
     SessionParticipantCard,
-    InteractionEvents 
+    InteractionEvents ,
+    ParticipantsColumn,
 };

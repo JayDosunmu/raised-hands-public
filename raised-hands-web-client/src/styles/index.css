@@ -22,23 +22,38 @@ code {
 }
 
 .ParticipantsColumn {
-  background-color: #292b2c;
-  height: 300%;
+  background-color:#363636
 }
 .InteractionEvents {
   background-color: white;
-  height: 280%;
 }
 
-.ParticipantsColumnHeader{
-  background-color: #279772;
+#root{
+  height: 100%;
 }
 
+html{
+  height: 100%;
+  
+}
+head{
+  height: 100%;
+}
+
+.app{
+  height: 100%;
+}
+body{
+  height:100%
+}
 
 .textColor{
   color: white;
 }
-
+.ParticipantsColumnHeader{
+  background-color: #279772;
+  
+}
 .LinkIe{
   color:white;
   font-weight: bold;

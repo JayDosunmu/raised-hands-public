@@ -1,6 +1,6 @@
 import React from 'react';
 import Stomp from 'stompjs';
-import { InteractionEvents, SessionParticipantCard, SessionService } from '.';
+import { InteractionEvents, SessionService, ParticipantsColumn} from '.';
 
 
 export default class SessionParticipateView extends React.Component {
@@ -74,32 +74,21 @@ export default class SessionParticipateView extends React.Component {
 
     render() {
         return (
-          
-                <div className="row">
+        
+    <div class="container-fluid h-100">
+    <div className="row h-100">
 
-                    <ul className="col-2" >
-                        <div className="ParticipantsColumn">
+        <div className="col-2 d-inline-block h-100 ParticipantsColumn">
+            <ParticipantsColumn/>
+      
+        </div> 
 
-                        <div className = "ParticipantsColumnHeader">
-                            <h2>Participants</h2>
-                        </div>
-                            {
-                                Object.entries(this.state.participants)
-                                    .sort(([idx1, p1], [idx2, p2]) => (p1.sessionParticipantId - p2.sessionParticipantId))
-                                    .map(([_, participant]) =>
-                                        <SessionParticipantCard participant={participant} key={participant.sessionParticipantId} />
-                                    )
-                            }
-                        </div>
-                    </ul>
-
-                        <div className="col-10">
-                        <div className="InteractionEvents">
-                            <InteractionEvents />
-                        </div>
-                    </div>
-
-                </div>
+        <div className="col d-inline-block h-75 InteractionEvents " >
+            <InteractionEvents />
+        </div>
+    
+    </div>
+    </div>
             
         );
     }

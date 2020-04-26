@@ -5,6 +5,10 @@ export default class SessionParticipateCard extends React.Component {
     constructor(props) {
         super(props);
         console.log(props);
+        this.state = {
+            websocket: null,
+            participants: {}
+        };
     }
     
     render() {

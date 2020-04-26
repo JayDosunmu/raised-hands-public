@@ -10,6 +10,7 @@ export default class SessionListView extends React.Component {
           sessionId: null,
           sessions: {},
       };
+      console.log(this.state)
   }
 
   componentDidMount() {
