@@ -1,9 +1,12 @@
 import React from 'react';
-import Stomp from 'stompjs';
+
 import { SessionParticipantList, SessionService } from '.';
 import { InteractionComponent } from '../interactions';
+import { SocketContext } from '../util';
 
 export default class SessionParticipateView extends React.Component {
+    static contextType = SocketContext;
+
     constructor(props) {
         super(props);
         this.state = {
@@ -26,11 +29,6 @@ export default class SessionParticipateView extends React.Component {
     }
 
     componentWillUnmount() {
-        if (this.state.websocketData) {
-            const { websocket, subscribeUrl } = this.state.websocketData;
-            websocket.unsubscribe(subscribeUrl);
-            websocket.disconnect();
-        }
     }
 
     getSession = async (sessionId) => {
@@ -39,32 +37,16 @@ export default class SessionParticipateView extends React.Component {
             p.account.accountId === JSON.parse(localStorage.getItem('user')).accountId);
         sessionData.userParticipant = userParticipant;
         this.setState(sessionData);
-        this.connectWebsocket(sessionData.websocketData);
-    }
-
-    connectWebsocket = ({ connectUrl, topicUrl, appUrl }) => {
-        try {
-            const websocket = Stomp.client(connectUrl);
-            websocket.connect({}, e => {
-                console.log("connected to websocket: " + connectUrl);
-
-                websocket.subscribe(topicUrl, message => {
-                    const data = JSON.parse(message.body);
-                    if (data.type === 'undefined') {
-                        this.addParticipant(data);
-                    }
-                })
-            });
-            this.setState({
-                websocketData: {
-                    websocket,
-                    publishUrl: appUrl,
-                    subscribeUrl: topicUrl,
+        const { websocketData } = sessionData;
+        this.context.socket.subscribe(
+            websocketData.subscribeUrl,
+            (message) => {
+                const data = JSON.parse(message.body);
+                if (data.type === 'undefined') {
+                    this.addParticipant(data);
                 }
-            });
-        } catch (error) {
-            console.log("unable to connect to websocket: " + error.message);
-        }
+            }
+        );
     }
 
     addParticipant = (participant) => {
@@ -79,18 +61,17 @@ export default class SessionParticipateView extends React.Component {
 
     render() {
         return (
-            <div className="row">
-                <div className="col-2" >
-                    <SessionParticipantList participants={this.state.participants} />
+                <div className="row">
+                    <div className="col-2" >
+                        <SessionParticipantList participants={this.state.participants} />
+                    </div>
+                    <div className="col">
+                        <InteractionComponent
+                            participant={this.state.userParticipant}
+                            session={this.state.session}
+                            />
+                    </div>
                 </div>
-                <div className="col">
-                    <InteractionComponent
-                        participant={this.state.userParticipant}
-                        session={this.state.session}
-                        websocketData={this.state.websocketData}
-                        />
-                </div>
-            </div>
         );
     }
 }
