@@ -3,7 +3,7 @@ import React from 'react';
 import { RegisterForm } from '.';
 
 export default () => (
-    <div>
+    <div className='row'>
         Register!
         <RegisterForm />
     </div>
