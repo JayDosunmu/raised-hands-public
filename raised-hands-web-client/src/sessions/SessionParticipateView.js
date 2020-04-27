@@ -29,24 +29,29 @@ export default class SessionParticipateView extends React.Component {
     }
 
     componentWillUnmount() {
+        this.state.websocketData.websocket.unsubscribe();
     }
 
     getSession = async (sessionId) => {
         const sessionData = await SessionService.getSession(sessionId);
+
         const [userParticipant] = sessionData.participants.filter(p =>
             p.account.accountId === JSON.parse(localStorage.getItem('user')).accountId);
         sessionData.userParticipant = userParticipant;
-        this.setState(sessionData);
+
         const { websocketData } = sessionData;
-        this.context.socket.subscribe(
-            websocketData.subscribeUrl,
+        const websocket = await this.context.socket.subscribe(
+            websocketData.topicUrl,
             (message) => {
                 const data = JSON.parse(message.body);
-                if (data.type === 'undefined') {
+                if (typeof data.type === 'undefined') {
                     this.addParticipant(data);
                 }
             }
         );
+        sessionData.websocketData.websocket = websocket
+
+        this.setState(sessionData);
     }
 
     addParticipant = (participant) => {

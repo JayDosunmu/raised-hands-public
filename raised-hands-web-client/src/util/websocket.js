@@ -37,11 +37,21 @@ export class SocketProvider extends React.Component {
     }
 
     subscribe = async (subscribeUrl, callbackFn) => {
-        return this.socket.subscribe(subscribeUrl, callbackFn);
+        try {
+            return this.socket.subscribe(subscribeUrl, callbackFn);
+        } catch (error) {
+            console.log(`Unable to subscribe to ${subscribeUrl}`);
+            console.log(error)
+        }
     }
 
     publish = async (publishUrl, options, data) => {
-        return this.socket.send(publishUrl, options, data);
+        try {
+            return this.socket.send(publishUrl, options, data);
+        } catch (error) {
+            console.log(`Unable to publish to ${publishUrl}`);
+            console.log(error)
+        }
     }
 
     connectWebsocket = async () => {
