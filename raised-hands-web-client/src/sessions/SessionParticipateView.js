@@ -75,21 +75,32 @@ export default class SessionParticipateView extends React.Component {
     render() {
         return (
         
-    <div class="container-fluid h-100">
+    <div className="container-fluid h-100">
     <div className="row h-100">
 
         <div className="col-2 d-inline-block h-100 ParticipantsColumn">
-            <ParticipantsColumn/>
+            <ParticipantsColumn >
+            websocket = {this.state.websocket}
+            participants = {this.state.participants}
+            sessionParticipantId = {this.state.participants.sessionParticipantId}
+            </ParticipantsColumn>
       
         </div> 
 
         <div className="col d-inline-block h-75 InteractionEvents " >
-            <InteractionEvents />
+            <InteractionEvents >
+            websocket = {this.state.websocket}
+            participants = {this.state.participants}
+            sessionParticipantId = {this.state.participants.sessionParticipantId}
+            sessionId = {this.state.participants.sessionId }
+            message ={this.state.participants.message }
+            cleared ={this.state.participants.cleared }
+            timestamp ={this.state.participants.timestamp}
+            vote ={this.state.participants.vote}
+            </InteractionEvents >
         </div>
-    
     </div>
-    </div>
-            
+    </div>       
         );
     }
 }

@@ -13,7 +13,6 @@ export default class SessionParticipateCard extends React.Component {
     
     render() {
         let name = this.props.participant.account.name;
-        
         return (
   
                 <div className="card border-dark mb-3" style={{ maxWidth: '12em', maxHeight: '5em',}}>
