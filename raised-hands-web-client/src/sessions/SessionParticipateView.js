@@ -1,14 +1,14 @@
 import React from 'react';
 import Stomp from 'stompjs';
-import { InteractionEvents, SessionParticipantCard, SessionService } from '.';
-
+import { SessionParticipantList, SessionService } from '.';
+import { InteractionComponent } from '../interactions';
 
 export default class SessionParticipateView extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            websocket: null,
-            participants: {}
+            userParticipant: null,
+            participants: {},
         };
     }
 
@@ -35,6 +35,9 @@ export default class SessionParticipateView extends React.Component {
 
     getSession = async (sessionId) => {
         const sessionData = await SessionService.getSession(sessionId);
+        const [userParticipant] = sessionData.participants.filter(p =>
+            p.account.accountId === JSON.parse(localStorage.getItem('user')).accountId);
+        sessionData.userParticipant = userParticipant;
         this.setState(sessionData);
         this.connectWebsocket(sessionData.websocketData);
     }
@@ -46,7 +49,10 @@ export default class SessionParticipateView extends React.Component {
                 console.log("connected to websocket: " + connectUrl);
 
                 websocket.subscribe(topicUrl, message => {
-                    this.addParticipant(JSON.parse(message.body));
+                    const data = JSON.parse(message.body);
+                    if (data.type === 'undefined') {
+                        this.addParticipant(data);
+                    }
                 })
             });
             this.setState({
@@ -69,38 +75,22 @@ export default class SessionParticipateView extends React.Component {
         this.setState({
             participants
         });
-
     }
 
     render() {
         return (
-          
-                <div className="row">
-
-                    <ul className="col-2" >
-                        <div className="ParticipantsColumn">
-
-                        <div className = "ParticipantsColumnHeader">
-                            <h2>Participants</h2>
-                        </div>
-                            {
-                                Object.entries(this.state.participants)
-                                    .sort(([idx1, p1], [idx2, p2]) => (p1.sessionParticipantId - p2.sessionParticipantId))
-                                    .map(([_, participant]) =>
-                                        <SessionParticipantCard participant={participant} key={participant.sessionParticipantId} />
-                                    )
-                            }
-                        </div>
-                    </ul>
-
-                        <div className="col-10">
-                        <div className="InteractionEvents">
-                            <InteractionEvents />
-                        </div>
-                    </div>
-
+            <div className="row">
+                <div className="col-2" >
+                    <SessionParticipantList participants={this.state.participants} />
                 </div>
-            
+                <div className="col">
+                    <InteractionComponent
+                        participant={this.state.userParticipant}
+                        session={this.state.session}
+                        websocketData={this.state.websocketData}
+                        />
+                </div>
+            </div>
         );
     }
 }
