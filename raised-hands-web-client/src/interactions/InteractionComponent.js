@@ -14,8 +14,8 @@ export default class InteractionComponent extends React.Component {
         }
     }
 
-    componentDidMount = async () => {
-        if (this.props.websocketData) {
+    componentDidUpdate = async (prevProps) => {
+        if (prevProps.websocketData !== this.props.websocketData) {
             const { topicUrl } = this.props.websocketData;
             const websocket = await this.context.socket.subscribe(topicUrl, message => {
                 const data = JSON.parse(message.body);
@@ -31,8 +31,6 @@ export default class InteractionComponent extends React.Component {
 
     componentWillUnmount() {
         try {
-            console.log('Interaction websocket at unmount')
-            console.log(this.state.websocket)
             this.state.websocket.unsubscribe();
         } catch (error) {
             console.log('unable to unsubscribe from interaction socket context')
@@ -41,9 +39,8 @@ export default class InteractionComponent extends React.Component {
     }
 
     addInteraction = (interaction) => {
-        console.log(interaction.message);
         const { interactions } = this.state;
-        interactions.push(interaction.message);
+        interactions[interaction.sessionParticipantId] = interaction;
         this.setState({ interactions });
     }
 

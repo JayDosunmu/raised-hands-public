@@ -30,8 +30,6 @@ export default class SessionParticipateView extends React.Component {
 
     componentWillUnmount() {
         try{
-            console.log('Session websocket at unmount')
-            console.log(this.state.websocket)
             this.state.websocket.unsubscribe();
         } catch (error) {
             console.log('unable to unsubscribe from session socket context')
@@ -42,11 +40,16 @@ export default class SessionParticipateView extends React.Component {
     getSession = async (sessionId) => {
         const sessionData = await SessionService.getSession(sessionId);
 
-        const { participants } = sessionData;
+        const { participants, websocketData } = sessionData;
         const [userParticipant] = sessionData.participants.filter(p =>
             p.account.accountId === JSON.parse(localStorage.getItem('user')).accountId);
+        this.setState({
+            participants,
+            sessionData,
+            userParticipant,
+            websocketData,
+        });
 
-        const { websocketData } = sessionData;
         const websocket = await this.context.socket.subscribe(
             websocketData.topicUrl,
             (message) => {
@@ -56,14 +59,10 @@ export default class SessionParticipateView extends React.Component {
                 }
             }
         );
-
         this.setState({
-            participants,
-            sessionData,
-            userParticipant,
             websocket,
-            websocketData,
         });
+
     }
 
     addParticipant = (participant) => {
