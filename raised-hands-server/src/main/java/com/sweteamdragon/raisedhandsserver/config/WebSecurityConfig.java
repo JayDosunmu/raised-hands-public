@@ -32,6 +32,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Value("${com.sweteamdragon.raised-hands.allowed-methods}")
     String allowedMethodsListString;
 
+    @Value("${com.sweteamdragon.raised-hands.allowed-headers}")
+    String allowedHeadersListString;
+
+    @Value("${com.sweteamdragon.raised-hands.exposed-headers}")
+    String exposedHeadersListString;
+
     @Autowired
     AccountService accountService;
 
@@ -47,6 +53,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
+            .cors()
+                .and()
             .csrf()
                 .disable()
             .sessionManagement()
@@ -74,8 +82,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList(allowedOriginsListString.split(",")));
         configuration.setAllowedMethods(Arrays.asList(allowedMethodsListString.split(",")));
-        configuration.setAllowedHeaders(Arrays.asList(new String[] {"Access-Control-Allow-Origin", "Authorization", "Content-Type"}));
-        configuration.setExposedHeaders(Arrays.asList(new String[] {"Access-Control-Allow-Origin"}));
+        configuration.setAllowedHeaders(Arrays.asList(allowedHeadersListString.split(",")));
+        configuration.setExposedHeaders(Arrays.asList(exposedHeadersListString.split(",")));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
@@ -92,7 +100,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    public void configure( WebSecurity web ) throws Exception
+    public void configure(WebSecurity web) throws Exception
     {
         web.ignoring().antMatchers( HttpMethod.OPTIONS, "/**" );
     }
