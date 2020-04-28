@@ -23,13 +23,6 @@ function skipping_tests() {
    esac
 }
 
-function dry_run() {
-  case $1 in
-    -n|--dry-run) echo true ;;
-    *) echo false;;
-   esac
-}
-
 for arg in "$@"
 do
     case $arg in
@@ -38,7 +31,7 @@ do
         shift
         ;;
         -n|--dry-run)
-        DRY_RUN=$( dry_run $1 )
+        DRY_RUN=1
         shift
         ;;
         -v|--version)
@@ -65,11 +58,11 @@ echo "Build artifact ($BRANCH): $VERSION -- Skipping tests: $(skipping_tests $SK
 ./scripts/rh-build-push-docker-frontend.sh $SKIP_TESTS -v $VERSION
 if [ $? -ne 0 ]; then { echo "Failed to containerize the frontend and register the image." ; exit 4; } fi
 
-if $DRY_RUN
+if [ -z $DRY_RUN ]
 then
-    echo "DRY RUN: would have executed:"
-    echo "\tkubectl set image deployment/raised-hands-frontend raised-hands-frontend=gcr.io/raised-hands-274417/raised-hands-frontend:$VERSION --record"
-else
     kubectl set image deployment/raised-hands-frontend raised-hands-frontend=gcr.io/raised-hands-274417/raised-hands-frontend:$VERSION --record
     if [ $? -ne 0 ]; then { echo "Failed to deploy the frontend. Contact the tech lead." ; exit 5; } fi
+else
+    echo "DRY RUN: would have executed:"
+    echo "\tkubectl set image deployment/raised-hands-frontend raised-hands-frontend=gcr.io/raised-hands-274417/raised-hands-frontend:$VERSION --record"
 fi
