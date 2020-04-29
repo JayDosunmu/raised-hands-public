@@ -1,14 +1,17 @@
 import React from 'react';
-import Stomp from 'stompjs';
-import { InteractionEvents, SessionParticipantCard, SessionService } from '.';
 
+import { SessionParticipantList, SessionService } from '.';
+import { InteractionComponent } from '../interactions';
+import { SocketProvider, SocketContext } from '../util';
 
-export default class SessionParticipateView extends React.Component {
+class SessionParticipateView extends React.Component {
+    static contextType = SocketContext;
+
     constructor(props) {
         super(props);
         this.state = {
-            websocket: null,
-            participants: {}
+            userParticipant: null,
+            participants: {},
         };
     }
 
@@ -26,39 +29,40 @@ export default class SessionParticipateView extends React.Component {
     }
 
     componentWillUnmount() {
-        if (this.state.websocketData) {
-            const { websocket, subscribeUrl } = this.state.websocketData;
-            websocket.unsubscribe(subscribeUrl);
-            websocket.disconnect();
+        try{
+            this.state.websocket.unsubscribe();
+        } catch (error) {
+            console.log('unable to unsubscribe from session socket context')
+            console.log(error)
         }
     }
 
     getSession = async (sessionId) => {
         const sessionData = await SessionService.getSession(sessionId);
-        this.setState(sessionData);
-        this.connectWebsocket(sessionData.websocketData);
-    }
 
-    connectWebsocket = ({ connectUrl, topicUrl, appUrl }) => {
-        try {
-            const websocket = Stomp.client(connectUrl);
-            websocket.connect({}, e => {
-                console.log("connected to websocket: " + connectUrl);
+        const { participants, websocketData } = sessionData;
+        const [userParticipant] = sessionData.participants.filter(p =>
+            p.account.accountId === JSON.parse(localStorage.getItem('user')).accountId);
+        this.setState({
+            participants,
+            sessionData,
+            userParticipant,
+            websocketData,
+        });
 
-                websocket.subscribe(topicUrl, message => {
-                    this.addParticipant(JSON.parse(message.body));
-                })
-            });
-            this.setState({
-                websocketData: {
-                    websocket,
-                    publishUrl: appUrl,
-                    subscribeUrl: topicUrl,
+        const websocket = await this.context.socket.subscribe(
+            websocketData.topicUrl,
+            (message) => {
+                const data = JSON.parse(message.body);
+                if (data.type === 'sessionJoin') {
+                    this.addParticipant(data);
                 }
-            });
-        } catch (error) {
-            console.log("unable to connect to websocket: " + error.message);
-        }
+            }
+        );
+        this.setState({
+            websocket,
+        });
+
     }
 
     addParticipant = (participant) => {
@@ -69,38 +73,28 @@ export default class SessionParticipateView extends React.Component {
         this.setState({
             participants
         });
-
     }
 
     render() {
         return (
-          
                 <div className="row">
-
-                    <ul className="col-2" >
-                        <div className="ParticipantsColumn">
-
-                        <div className = "ParticipantsColumnHeader">
-                            <h2>Participants</h2>
-                        </div>
-                            {
-                                Object.entries(this.state.participants)
-                                    .sort(([idx1, p1], [idx2, p2]) => (p1.sessionParticipantId - p2.sessionParticipantId))
-                                    .map(([_, participant]) =>
-                                        <SessionParticipantCard participant={participant} key={participant.sessionParticipantId} />
-                                    )
-                            }
-                        </div>
-                    </ul>
-
-                        <div className="col-10">
-                        <div className="InteractionEvents">
-                            <InteractionEvents />
-                        </div>
+                    <div className="col-2" >
+                        <SessionParticipantList participants={this.state.participants} />
                     </div>
-
+                    <div className="col">
+                        <InteractionComponent
+                            sessionId={this.state.sessionId}
+                            participant={this.state.userParticipant}
+                            websocketData={this.state.websocketData}
+                            />
+                    </div>
                 </div>
-            
         );
     }
 }
+
+export default (props) => (
+    <SocketProvider>
+        <SessionParticipateView {...props} />
+    </SocketProvider>
+);

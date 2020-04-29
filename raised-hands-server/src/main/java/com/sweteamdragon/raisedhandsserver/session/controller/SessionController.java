@@ -1,12 +1,11 @@
 package com.sweteamdragon.raisedhandsserver.session.controller;
 
 import com.sweteamdragon.raisedhandsserver.auth.model.Account;
-import com.sweteamdragon.raisedhandsserver.auth.security.AuthenticationFacade;
 import com.sweteamdragon.raisedhandsserver.auth.service.AccountService;
 import com.sweteamdragon.raisedhandsserver.session.dto.JoinSessionRequestDto;
 import com.sweteamdragon.raisedhandsserver.session.dto.SessionCreateRequestDto;
 import com.sweteamdragon.raisedhandsserver.session.dto.SessionResponseDto;
-import com.sweteamdragon.raisedhandsserver.session.dto.ShallowSessionParticipantDto;
+import com.sweteamdragon.raisedhandsserver.session.message.SessionJoinMessage;
 import com.sweteamdragon.raisedhandsserver.session.model.Session;
 import com.sweteamdragon.raisedhandsserver.session.model.SessionParticipant;
 import com.sweteamdragon.raisedhandsserver.session.service.SessionService;
@@ -78,7 +77,7 @@ public class SessionController {
     @ResponseStatus(HttpStatus.CREATED)
     public SessionResponseDto create(
                 @RequestBody SessionCreateRequestDto sessionCreateRequestDto,
-                Authentication authentication) throws ResponseStatusException{
+                Authentication authentication) throws ResponseStatusException {
         try {
             Account user = accountService.findByEmail((String) authentication.getPrincipal());
 
@@ -120,7 +119,7 @@ public class SessionController {
                 sessionService.getSessionTopicUrl(session),
                 modelMapper.map(
                     sessionParticipant,
-                    ShallowSessionParticipantDto.class
+                    SessionJoinMessage.class
                 )
             );
             return sessionService.getSessionWithMessagingMetadata(session);

@@ -34,9 +34,7 @@ export default class LoginForm extends Component {
   }
 
   login = async (email, password) => {
-    const { user, jwt } = await AuthService.authenticate(email, password);
-
-    AuthService.setAppUser(user, jwt);
+    await AuthService.authenticate(email, password);
     this.setState({
       redirectToReferrer: true,
     })

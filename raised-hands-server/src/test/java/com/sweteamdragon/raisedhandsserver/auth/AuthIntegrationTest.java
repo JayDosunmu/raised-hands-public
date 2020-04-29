@@ -47,7 +47,7 @@ class AuthIntegrationTest {
         RegisterRequestDto userRegistrationDataObject = new RegisterRequestDto("test@email.com", "testPassw0rd!", "testPassw0rd!", "name");
         String json = new ObjectMapper().writeValueAsString(userRegistrationDataObject);
         this.mockMvc.perform(post(registerEndpoint).contentType("application/json").content(json))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.user.email").isString())
                 .andExpect(jsonPath("$.user.name").isString())
                 .andExpect(jsonPath("$.user.accountId").isNumber())

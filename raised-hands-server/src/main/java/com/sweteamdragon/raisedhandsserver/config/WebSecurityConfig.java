@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -30,6 +31,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Value("${com.sweteamdragon.raised-hands.allowed-methods}")
     String allowedMethodsListString;
+
+    @Value("${com.sweteamdragon.raised-hands.allowed-headers}")
+    String allowedHeadersListString;
+
+    @Value("${com.sweteamdragon.raised-hands.exposed-headers}")
+    String exposedHeadersListString;
 
     @Autowired
     AccountService accountService;
@@ -56,10 +63,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .authorizeRequests()
                 .antMatchers("/auth/register", "/auth/login", "/connect")
                     .permitAll()
-                .antMatchers(HttpMethod.OPTIONS, "*")
+                .antMatchers(HttpMethod.OPTIONS, "/**")
                     .permitAll()
                 .anyRequest()
-                    .permitAll()
+                    .authenticated()
                 .and()
             .addFilter(jwtAuthenticationFilter())
             .addFilter(jwtAuthorizationFilter());
@@ -75,8 +82,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList(allowedOriginsListString.split(",")));
         configuration.setAllowedMethods(Arrays.asList(allowedMethodsListString.split(",")));
-        configuration.setAllowedHeaders(Arrays.asList(new String[] {"Access-Control-Allow-Origin", "Authorization", "Content-Type"}));
-        configuration.setExposedHeaders(Arrays.asList(new String[] {"Access-Control-Allow-Origin"}));
+        configuration.setAllowedHeaders(Arrays.asList(allowedHeadersListString.split(",")));
+        configuration.setExposedHeaders(Arrays.asList(exposedHeadersListString.split(",")));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
@@ -90,5 +97,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private  JwtAuthorizationFilter jwtAuthorizationFilter() throws Exception {
         return new JwtAuthorizationFilter(authenticationManager(), securityProperties, jwtUtil);
+    }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception
+    {
+        web.ignoring().antMatchers( HttpMethod.OPTIONS, "/**" );
     }
 }

@@ -2,7 +2,10 @@ import { http } from '../util';
 
 function formatConnectUrl(websocketUrl) {
     // TODO: this must be configurable
-    return `ws://localhost:8080${websocketUrl}`
+    return `ws://${
+        process.env.REACT_APP_API_URL
+            ? 'localhost:8080'
+            : 'api.raisedhands.io'}${websocketUrl}`
 }
 
 async function createSession(name, distractionFree, startDate, endDate) {

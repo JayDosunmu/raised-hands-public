@@ -3,7 +3,7 @@ import React from 'react';
 import { LoginForm } from '.';
 
 export default () => (
-    <div>
+    <div className='row'>
         Login!
         <LoginForm />
     </div>

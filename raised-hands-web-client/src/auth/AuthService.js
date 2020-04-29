@@ -16,6 +16,8 @@ async function authenticate(email, password) {
                 password,
             }
         )
+    const { user, jwt } = loginResponse.data;
+    setAppUser(user, jwt);
     return loginResponse.data;
 }
 
@@ -23,7 +25,7 @@ function isAuthenticated() {
     return localStorage.getItem('token') != null;
 }
 
-function logout(blah) {
+function logout() {
     localStorage.removeItem('token');
 }
 
@@ -43,7 +45,7 @@ async function register(email, password, confirmPassword, name) {
 
 function setAppUser(user, jwt) {
     localStorage.setItem('token', jwt);
-    localStorage.setItem('user', user);
+    localStorage.setItem('user', JSON.stringify(user));
 }
 
 export default {

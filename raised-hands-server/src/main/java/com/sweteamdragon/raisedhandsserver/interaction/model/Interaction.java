@@ -15,6 +15,7 @@ import java.util.Date;
 @Getter
 @Setter
 public class Interaction{
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long interactionId;
@@ -27,18 +28,16 @@ public class Interaction{
 
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
-    private Date timestamp;  //date
+    private Date timestamp;
 
     private String message;
 
     private int vote;
 
-    public Interaction(String message, Session session, SessionParticipant sessionParticipant,
-                        Date timestamp, int vote) {
+    public Interaction(String message, Session session, SessionParticipant sessionParticipant, int vote) {
         this.message = message;
         this.session = session;
         this.sessionParticipant = sessionParticipant;
-        this.timestamp = timestamp;
         this.vote = vote;
     }
 }
