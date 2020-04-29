@@ -78,7 +78,7 @@ public class SessionController {
     @ResponseStatus(HttpStatus.CREATED)
     public SessionResponseDto create(
                 @RequestBody SessionCreateRequestDto sessionCreateRequestDto,
-                Authentication authentication) throws ResponseStatusException{
+                Authentication authentication) throws ResponseStatusException {
         try {
             Account user = accountService.findByEmail((String) authentication.getPrincipal());
 

@@ -16,7 +16,7 @@ public class SessionMessageController {
     ModelMapper modelMapper;
 
     @MessageMapping("/{sessionId}/join")
-    @SendTo("/topic/session/{sessionId}/join")
+    @SendTo("/topic/session/{sessionId}")
     public ShallowSessionParticipantDto join(SessionParticipant message) throws Exception {
         return modelMapper.map(message, ShallowSessionParticipantDto.class);
     }
