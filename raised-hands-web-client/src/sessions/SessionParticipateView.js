@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { SessionParticipantList, SessionService } from '.';
+import { SessionParticipateHeader, SessionParticipantList, SessionService } from '.';
 import { InteractionComponent } from '../interactions';
 import { SocketProvider, SocketContext } from '../util';
 
@@ -56,6 +56,10 @@ class SessionParticipateView extends React.Component {
                 const data = JSON.parse(message.body);
                 if (data.type === 'sessionJoin') {
                     this.addParticipant(data);
+                } else if (data.type === 'sessionActive') {
+                    const { sessionData } = this.state;
+                    sessionData.active = data.active;
+                    this.setState({ sessionData });
                 }
             }
         );
@@ -77,18 +81,25 @@ class SessionParticipateView extends React.Component {
 
     render() {
         return (
-                <div className="row">
-                    <div className="col-2" >
-                        <SessionParticipantList participants={this.state.participants} />
-                    </div>
-                    <div className="col">
-                        <InteractionComponent
-                            sessionId={this.state.sessionId}
-                            participant={this.state.userParticipant}
-                            websocketData={this.state.websocketData}
-                            />
-                    </div>
+            <div className="row">
+                <div className="col">
+                    <SessionParticipateHeader
+                        session={this.state.sessionData}
+                        participant={this.state.userParticipant}/>
                 </div>
+                <div className="w-100"/>
+                <div className="col-2" >
+                    <SessionParticipantList participants={this.state.participants} />
+                </div>
+                <div className="col">
+                    <InteractionComponent
+                        sessionId={this.state.sessionId}
+                        sessionActive={this.state.sessionData ? this.state.sessionData.active : false}
+                        participant={this.state.userParticipant}
+                        websocketData={this.state.websocketData}
+                        />
+                </div>
+            </div>
         );
     }
 }

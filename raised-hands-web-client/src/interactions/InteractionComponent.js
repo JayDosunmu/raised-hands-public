@@ -72,7 +72,9 @@ export default class InteractionComponent extends React.Component {
         return (
             <div className="InteractionEvents">
                 <InteractionList interactions={this.state.interactions} />
-                <InteractionInput createInteraction={this.createInteraction} />
+                {
+                    this.props.sessionActive && <InteractionInput createInteraction={this.createInteraction} />
+                }
             </div>
         );
     }
