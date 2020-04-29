@@ -2,9 +2,9 @@ import React from 'react';
 
 import { SessionParticipantList, SessionService } from '.';
 import { InteractionComponent } from '../interactions';
-import { SocketContext } from '../util';
+import { SocketProvider, SocketContext } from '../util';
 
-export default class SessionParticipateView extends React.Component {
+class SessionParticipateView extends React.Component {
     static contextType = SocketContext;
 
     constructor(props) {
@@ -92,3 +92,9 @@ export default class SessionParticipateView extends React.Component {
         );
     }
 }
+
+export default (props) => (
+    <SocketProvider>
+        <SessionParticipateView {...props} />
+    </SocketProvider>
+);

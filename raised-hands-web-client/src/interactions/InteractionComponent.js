@@ -14,10 +14,6 @@ export default class InteractionComponent extends React.Component {
         }
     }
 
-    componentDidMount() {
-        this.getInteractions(this.props.sessionId)
-    }
-
     componentDidUpdate = async (prevProps) => {
         if (prevProps.websocketData !== this.props.websocketData) {
             const { topicUrl } = this.props.websocketData;
@@ -30,6 +26,9 @@ export default class InteractionComponent extends React.Component {
             this.setState({
                 websocket,
             })
+        }
+        if (prevProps.sessionId !== this.props.sessionId) {
+            this.getInteractions(this.props.sessionId);
         }
     }
 
