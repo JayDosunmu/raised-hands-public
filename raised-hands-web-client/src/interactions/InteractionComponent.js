@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { InteractionInput, InteractionList, InteractionService } from '.';
-import { createInteractionMessage, SocketContext } from '../util';
+import { SocketContext } from '../util';
 
 
 export default class InteractionComponent extends React.Component {

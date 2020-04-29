@@ -5,6 +5,7 @@ import com.sweteamdragon.raisedhandsserver.auth.service.AccountService;
 import com.sweteamdragon.raisedhandsserver.session.dto.JoinSessionRequestDto;
 import com.sweteamdragon.raisedhandsserver.session.dto.SessionCreateRequestDto;
 import com.sweteamdragon.raisedhandsserver.session.dto.SessionResponseDto;
+import com.sweteamdragon.raisedhandsserver.session.message.SessionActiveMessage;
 import com.sweteamdragon.raisedhandsserver.session.message.SessionJoinMessage;
 import com.sweteamdragon.raisedhandsserver.session.model.Session;
 import com.sweteamdragon.raisedhandsserver.session.model.SessionParticipant;
@@ -12,6 +13,7 @@ import com.sweteamdragon.raisedhandsserver.session.service.SessionService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -126,6 +128,35 @@ public class SessionController {
         // TODO: Handle exceptions in a more granular fashion
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
+    }
+
+    @PutMapping("/{sessionId:^\\d+}")
+    public ResponseEntity changeSessionActive(
+            @PathVariable long sessionId,
+            @RequestBody Map<String, Boolean> activeState,
+            Authentication authentication) throws ResponseStatusException {
+        try {
+            Account account = accountService.findByEmail((String) authentication.getPrincipal());
+            Session session = sessionService.findById(sessionId)
+                    .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find session with that ID")
+                    );
+            if (session.getLeader().getAccount().equals(account)) {
+                session.setActive(false);
+                sessionService.save(session);
+
+                template.convertAndSend(
+                        sessionService.getSessionTopicUrl(session),
+                        new SessionActiveMessage(activeState.getOrDefault("active", true))
+                );
+
+                return new ResponseEntity(HttpStatus.OK);
+            } else {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Unable to modify session");
+            }
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Unable to modify session");
         }
     }
 }
