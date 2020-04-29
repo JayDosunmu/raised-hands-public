@@ -10,6 +10,7 @@ import java.util.Date;
 @Getter
 @Setter
 public class InteractionMessage {
+    private final String type = "interaction";
     private long interactionId;
     private long sessionId;
     private long sessionParticipantId;

@@ -12,6 +12,7 @@ import com.sweteamdragon.raisedhandsserver.session.service.SessionService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -41,7 +42,7 @@ public class InteractionController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void create(
+    public ResponseEntity create(
             @RequestBody InteractionCreateRequestDto interactionCreateRequestDto,
             Authentication authentication) throws ResponseStatusException {
         try {
@@ -67,16 +68,19 @@ public class InteractionController {
                     interactionCreateRequestDto.getMessage()
             );
 
-            InteractionMessage interactionMessage = modelMapper.map(
-                    interaction,
-                    InteractionMessage.class
-            );
+            // TODO: this should be done using modelMapper
+            InteractionMessage interactionMessage = new InteractionMessage();
+            interactionMessage.setInteractionId(interaction.getInteractionId());
             interactionMessage.setSessionId(sessionId);
             interactionMessage.setSessionParticipantId(sessionParticipantId);
+            interactionMessage.setMessage(interaction.getMessage());
+            interactionMessage.setTimestamp(interaction.getTimestamp());
+            interactionMessage.setVote(interaction.getVote());
             template.convertAndSend(
                     sessionService.getSessionTopicUrl(session),
                     interactionMessage
             );
+            return new ResponseEntity(HttpStatus.CREATED);
 
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());

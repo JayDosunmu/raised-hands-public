@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { InteractionInput, InteractionList } from '.';
+import { InteractionInput, InteractionList, InteractionService } from '.';
 import { createInteractionMessage, SocketContext } from '../util';
 
 
@@ -14,12 +14,16 @@ export default class InteractionComponent extends React.Component {
         }
     }
 
+    componentDidMount() {
+        this.getInteractions(this.props.sessionId)
+    }
+
     componentDidUpdate = async (prevProps) => {
         if (prevProps.websocketData !== this.props.websocketData) {
             const { topicUrl } = this.props.websocketData;
             const websocket = await this.context.socket.subscribe(topicUrl, message => {
                 const data = JSON.parse(message.body);
-                if (data.type === 'message') {
+                if (data.type === 'interaction') {
                     this.addInteraction(data);
                 }
             });
@@ -40,16 +44,29 @@ export default class InteractionComponent extends React.Component {
 
     addInteraction = (interaction) => {
         const { interactions } = this.state;
-        interactions[interaction.sessionParticipantId] = interaction;
+        interactions[interaction.interactionId] = interaction;
         this.setState({ interactions });
     }
 
     createInteraction = (message) => {
         const participantId = this.props.participant.sessionParticipantId
-        const { topicUrl } = this.props.websocketData;
+        InteractionService.create(
+            this.props.sessionId,
+            participantId,
+            message
+        );
+    }
 
-        const messageBundle = createInteractionMessage(message, participantId);
-        this.context.socket.publish(topicUrl, {}, messageBundle);
+    getInteractions = async (sessionId) => {
+        const interactionsData = await InteractionService.getInteractions(sessionId);
+
+        const { interactions } = this.state;
+        interactionsData.forEach(interaction => {
+            interactions[interaction.interactionId] = interaction;
+        });
+        this.setState({
+            interactions
+        });
     }
 
     render() {

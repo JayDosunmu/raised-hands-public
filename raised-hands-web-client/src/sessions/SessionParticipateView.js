@@ -54,7 +54,7 @@ export default class SessionParticipateView extends React.Component {
             websocketData.topicUrl,
             (message) => {
                 const data = JSON.parse(message.body);
-                if (typeof data.type === 'undefined') {
+                if (data.type === 'sessionJoin') {
                     this.addParticipant(data);
                 }
             }
@@ -83,6 +83,7 @@ export default class SessionParticipateView extends React.Component {
                     </div>
                     <div className="col">
                         <InteractionComponent
+                            sessionId={this.state.sessionId}
                             participant={this.state.userParticipant}
                             websocketData={this.state.websocketData}
                             />
