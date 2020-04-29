@@ -1,6 +1,9 @@
 package com.sweteamdragon.raisedhandsserver.interaction.controller;
 
+import com.sweteamdragon.raisedhandsserver.auth.model.Account;
+import com.sweteamdragon.raisedhandsserver.auth.service.AccountService;
 import com.sweteamdragon.raisedhandsserver.interaction.dto.InteractionCreateRequestDto;
+import com.sweteamdragon.raisedhandsserver.interaction.dto.InteractionResponseDto;
 import com.sweteamdragon.raisedhandsserver.interaction.message.InteractionMessage;
 import com.sweteamdragon.raisedhandsserver.interaction.model.Interaction;
 import com.sweteamdragon.raisedhandsserver.interaction.service.InteractionService;
@@ -18,9 +21,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Arrays;
+import java.util.List;
+
 @RestController
 @RequestMapping("/interaction")
 public class InteractionController {
+
+    @Autowired
+    AccountService accountService;
 
     @Autowired
     InteractionService interactionService;
@@ -39,6 +48,41 @@ public class InteractionController {
 
     @Autowired
     private SimpMessagingTemplate template;
+
+    @GetMapping("/session/{sessionId:^\\d+}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<InteractionResponseDto> getInteractionsBySession(
+            @PathVariable long sessionId,
+            Authentication authentication) throws ResponseStatusException {
+        Account account = accountService.findByEmail((String) authentication.getPrincipal());
+        sessionParticipantRepository.findBySessionSessionIdAndAccountAccountId(
+                sessionId,
+                account.getAccountId()
+        ).orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "User is not a participant of this session"));
+
+        Session session = sessionService.findById(sessionId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find a session with this Id"));
+        List<Interaction> interactions = interactionService.getInteractionsBySession(session);
+
+        InteractionResponseDto[] interactionsResponse = new InteractionResponseDto[interactions.size()];
+
+        for (int i = 0; i<interactions.size(); i++) {
+            // TODO: this should be done using modelMapper
+            Interaction interaction = interactions.get(i);
+
+            InteractionResponseDto interactionResponseDto = new InteractionResponseDto();
+            interactionResponseDto.setInteractionId(interaction.getInteractionId());
+            interactionResponseDto.setSessionId(interaction.getSession().getSessionId());
+            interactionResponseDto.setSessionParticipantId(
+                    interaction.getSessionParticipant().getSessionParticipantId());
+            interactionResponseDto.setMessage(interaction.getMessage());
+            interactionResponseDto.setTimestamp(interaction.getTimestamp());
+            interactionResponseDto.setVote(interaction.getVote());
+
+            interactionsResponse[i] = interactionResponseDto;
+        }
+        return Arrays.asList(interactionsResponse);
+    }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

@@ -2,7 +2,7 @@ import { http } from '../util';
 
 async function getInteractions(sessionId) {
     try {
-        const url = `/interaction/service/${sessionId}`
+        const url = `/interaction/session/${sessionId}`
         const getInteractionsResponse = await http.get(url);
         return getInteractionsResponse.data;
     } catch(error) {
