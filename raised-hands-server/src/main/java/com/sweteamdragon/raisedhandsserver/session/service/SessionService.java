@@ -28,4 +28,6 @@ public interface SessionService {
     String getSessionTopicUrl(Session session);
 
     String getSessionAppUrl(Session session);
+
+    boolean save(Session session);
 }

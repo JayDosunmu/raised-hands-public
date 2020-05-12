@@ -48,7 +48,15 @@ async function joinSession(joinId, passcode) {
     return joinSession.data;
 }
 
+async function changeSessionActive(sessionId, active) {
+    const url = `/session/${sessionId}`;
+    http.put(url, {
+        active
+    });
+}
+
 export {
+    changeSessionActive,
     createSession,
     getSession,
     getUserSessions,

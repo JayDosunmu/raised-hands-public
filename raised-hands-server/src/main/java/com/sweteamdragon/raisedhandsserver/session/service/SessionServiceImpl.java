@@ -127,4 +127,14 @@ public class SessionServiceImpl implements SessionService {
     public String getSessionAppUrl(Session session) {
         return String.format("/app/session/%d", session.getSessionId());
     }
+
+    @Override
+    public boolean save(Session session) {
+        try {
+            sessionRepository.save(session);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }

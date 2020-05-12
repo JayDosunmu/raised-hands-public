@@ -8,6 +8,7 @@ import SessionParticipantCard from './SessionParticipantCard';
 import SessionParticipantList from './SessionParticipantList';
 import SessionList from './SessionList';
 import SessionCard from './SessionCard';
+import SessionParticipateHeader from './SessionParticipateHeader';
 
 export {
     CreateSessionForm,
@@ -20,4 +21,5 @@ export {
     SessionParticipantList,
     SessionList,
     SessionCard,
+    SessionParticipateHeader,
 };

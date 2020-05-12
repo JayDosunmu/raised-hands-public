@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { InteractionInput, InteractionList, InteractionService } from '.';
-import { createInteractionMessage, SocketContext } from '../util';
+import { SocketContext } from '../util';
 
 
 export default class InteractionComponent extends React.Component {
@@ -72,7 +72,9 @@ export default class InteractionComponent extends React.Component {
         return (
             <div className="InteractionEvents">
                 <InteractionList interactions={this.state.interactions} />
-                <InteractionInput createInteraction={this.createInteraction} />
+                {
+                    this.props.sessionActive && <InteractionInput createInteraction={this.createInteraction} />
+                }
             </div>
         );
     }
